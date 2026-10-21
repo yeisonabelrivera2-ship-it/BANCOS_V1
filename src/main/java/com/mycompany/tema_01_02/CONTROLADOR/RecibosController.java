@@ -3,6 +3,7 @@ package com.mycompany.tema_01_02.CONTROLADOR;
 
 import com.mycompany.tema_01_02.MODELO.Recibos;
 import java.sql.*;
+import java.util.ArrayList;
 
 public class RecibosController {
     
@@ -13,10 +14,10 @@ public class RecibosController {
         this.con = con;
     }
     
-    public Recibos findById(String id)
-
-    {
-        Recibos rb = null;
+    public ArrayList<Recibos> findById(String id){
+        
+        ArrayList<Recibos> listaRecibos = new ArrayList<>();
+        
         String sql = "SELECT NNUMPREST, NNUMRECIB, DFECREC, NIMPREC, DFECPAGO FROM RECIBOS WHERE NNUMPREST = ?;";
         
         try(PreparedStatement st = con.prepareStatement(sql)) 
@@ -25,19 +26,22 @@ public class RecibosController {
             
             try(ResultSet rs = st.executeQuery())
             {
-                if (rs.next())
+                while(rs.next())
                 {
-                    rb = new Recibos(rs.getInt("NNUMPREST"), 
+                    
+                    Recibos rb = new Recibos(rs.getInt("NNUMPREST"), 
                     rs.getInt("NNUMRECIB"), 
                     rs.getDate("DFECREC").toLocalDate(), 
                     rs.getInt("NIMPREC"), 
                     rs.getDate("DFECPAGO").toLocalDate());
+                    
+                    listaRecibos.add(rb);
                 }
             }
         } catch (SQLException ex) { 
             System.out.println("Error al buscar los recibos");;
         }
-        return rb;
+        return listaRecibos;
     }
     
     
