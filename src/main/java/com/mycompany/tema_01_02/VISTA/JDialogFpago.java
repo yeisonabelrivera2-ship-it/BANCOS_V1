@@ -74,6 +74,7 @@ public class JDialogFpago extends javax.swing.JDialog {
         JButtonUpdate.setFocusable(false);
         JButtonUpdate.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         JButtonUpdate.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        JButtonUpdate.addActionListener(this::JButtonUpdateActionPerformed);
         jToolBar1.add(JButtonUpdate);
 
         JButtonDelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/eliminar.png"))); // NOI18N
@@ -291,6 +292,11 @@ public class JDialogFpago extends javax.swing.JDialog {
             String descripcion = JTextFieldDescripcion.getText().trim();
             long recibos = Long.parseLong(JTextFieldRecibos.getText().trim());
             
+            if (crearSIoNo() == false) 
+            {
+                return;
+            }
+            
             Fpago nuevo = new Fpago(codigo, descripcion, recibos);
             controlador.create(nuevo);
             
@@ -315,7 +321,7 @@ public class JDialogFpago extends javax.swing.JDialog {
         // TODO add your handling code here:
         
         
-        if (seleccionarTablaBorrar() == false) 
+        if (seleccionarTablaBorrar()== false) 
         {
             return;
         }
@@ -339,6 +345,15 @@ public class JDialogFpago extends javax.swing.JDialog {
             int filasAfectadas = controlador.deleteById(fpEliminado.getCCODFPAGO());
             limpiarCampos();
             JOptionPane.showMessageDialog(this, "Eliminado correctamente" );
+            
+            ArrayList<Fpago> lista = controlador.readAll();
+            
+            if (lista.isEmpty()) 
+            {
+                JOptionPane.showMessageDialog(this, "La lista esta vacia");
+            }
+            
+            CargarTabla(lista);
         } 
         catch (SQLException e) 
         {
@@ -352,6 +367,53 @@ public class JDialogFpago extends javax.swing.JDialog {
         
         seleccionarTabla();
     }//GEN-LAST:event_JTableTablaMouseClicked
+
+    private void JButtonUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonUpdateActionPerformed
+        // TODO add your handling code here:
+        
+      
+        if (pkNoModificada() == false) 
+        {
+            return;
+        }
+        if (validarAñadirFpago() == false) 
+        {
+            return;
+        }
+        if (ActualizarSIoNo() == false) 
+        {
+            return;
+        }
+        
+        try 
+        {
+            Fpago fpModificado = obneterFpago();
+            int filasAfectadas = controlador.update(fpModificado);
+            
+            if (filasAfectadas > 0) 
+            {
+                JOptionPane.showMessageDialog(this,"El método de pago se ha modificado correctamente");
+                
+                ArrayList<Fpago> lista = controlador.readAll();
+            
+                if (lista.isEmpty()) 
+                {
+                    JOptionPane.showMessageDialog(this, "La lista esta vacia");
+                }
+            
+                CargarTabla(lista);
+            } 
+            else 
+            {
+                JOptionPane.showMessageDialog(this,"No se ha modificado ningún registro. Comprueba el código.");
+            }
+        } 
+        catch (Exception e) 
+        {
+            JOptionPane.showMessageDialog(this, "ERROR: " + e.getMessage());
+        }
+        
+    }//GEN-LAST:event_JButtonUpdateActionPerformed
 
     /**
      * @param args the command line arguments
@@ -585,11 +647,59 @@ public class JDialogFpago extends javax.swing.JDialog {
         return false;
     }
     
+    public boolean ActualizarSIoNo()
+    {
+        int respuesta = JOptionPane.showConfirmDialog(this, "¿Estas seguro de modificar la forma de pago?",
+                                                            "",
+                                                            JOptionPane.YES_NO_OPTION);
+        
+        if (respuesta == JOptionPane.YES_OPTION) 
+        {
+            return true;
+        }
+        return false;
+    }
+    
+    public boolean crearSIoNo()
+    {
+        int respuesta = JOptionPane.showConfirmDialog(this, "¿Estas seguro de modificar la forma de pago?",
+                                                            "",
+                                                            JOptionPane.YES_NO_OPTION);
+        
+        if (respuesta == JOptionPane.YES_OPTION) 
+        {
+            return true;
+        }
+        return false;
+    }
+    
     public void limpiarCampos()
     {
         JTextFieldCodigo.setText("");
         JTextFieldDescripcion.setText("");
         JTextFieldRecibos.setText("");
+    }
+    
+    
+    public boolean pkNoModificada()
+    {
+        int filaSeleccionada = JTableTabla.getSelectedRow();
+        
+        if (filaSeleccionada == -1) 
+        {
+            JOptionPane.showMessageDialog(rootPane, "No hay fila seleccionada");
+            return false;
+        }
+        String pk = JTableTabla.getValueAt(filaSeleccionada, 0).toString().trim().toUpperCase();
+        String codigo = JTextFieldCodigo.getText().trim().toUpperCase();
+        
+        if (pk.equals(codigo)) 
+        {
+            return true;
+        }
+        
+        JOptionPane.showMessageDialog(this, "No se puede modificar la clave primaria");
+        return false;
     }
     //findall 
     //findallranger

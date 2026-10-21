@@ -98,7 +98,23 @@ public class FpagoController {
         return filasAfectadas;
     }
     
-    
-    
-     //metodod modificar 
+    public int update(Fpago fp)
+    {
+        int filasAfectadas = 0;
+        String sql = "UPDATE FPAGO SET CDESFPAGO = ?, NRECIBOS = ? WHERE CCODFPAGO = ?";
+        
+        try (PreparedStatement st = con.prepareStatement(sql))
+        {
+            st.setString(1, fp.getCDESFPAGO());
+            st.setLong(2, fp.getNRECIBOS());
+            st.setString(3, fp.getCCODFPAGO());
+            
+            filasAfectadas = st.executeUpdate();
+        } 
+        catch (SQLException e) 
+        {
+            e.printStackTrace();
+        }
+        return filasAfectadas;
+    }
 }

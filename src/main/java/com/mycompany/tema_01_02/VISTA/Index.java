@@ -109,7 +109,7 @@ public class Index extends javax.swing.JFrame {
     private void jButtonPrestamosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPrestamosActionPerformed
         // TODO add your handling code here:
         
-        JDialogPrestamosRecibos JDPR = new JDialogPrestamosRecibos(this, true);
+        JDialogPrestamosRecibos JDPR = new JDialogPrestamosRecibos(this, true, con);
         JDPR.setLocationRelativeTo(this);
         JDPR.setVisible(true);
         
