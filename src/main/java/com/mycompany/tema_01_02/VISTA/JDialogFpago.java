@@ -315,6 +315,35 @@ public class JDialogFpago extends javax.swing.JDialog {
         // TODO add your handling code here:
         
         
+        if (seleccionarTablaBorrar() == false) 
+        {
+            return;
+        }
+        
+        try 
+        {
+            Fpago fpEliminado = obneterFpago();
+            
+            if (fpEliminado == null) 
+            {
+                //CAMBIAR EL MENSAJE DE ERROR 
+                JOptionPane.showMessageDialog(this, "ERROR: el objeto es null");
+                return;
+            }
+            
+            if (EliminarSIoNo() == false) 
+            {
+                return;
+            }
+            
+            int filasAfectadas = controlador.deleteById(fpEliminado.getCCODFPAGO());
+            limpiarCampos();
+            JOptionPane.showMessageDialog(this, "Eliminado correctamente" );
+        } 
+        catch (SQLException e) 
+        {
+            JOptionPane.showMessageDialog(this, "ERROR: " + e.getMessage());
+        }
         
     }//GEN-LAST:event_DELETEActionPerformed
 
@@ -512,21 +541,56 @@ public class JDialogFpago extends javax.swing.JDialog {
     }
     
     
-    public void seleccionarTablaBorrar()
+    public boolean seleccionarTablaBorrar()
     {
         int filaSeleccionada = TABLA.getSelectedRow();
         
         if (filaSeleccionada == -1) 
         {
             JOptionPane.showMessageDialog(rootPane, "No hay fila seleccionada");
-            return;
+            return false;
         }
-        
+     
         CODIGO.setText(TABLA.getValueAt(filaSeleccionada, 0).toString());
         DESCRIPCION.setText(TABLA.getValueAt(filaSeleccionada, 1).toString());
         RECIBOS.setText(TABLA.getValueAt(filaSeleccionada, 2).toString());
+        return true;
     }
     
+    
+    public Fpago obneterFpago()
+    {
+        Fpago fp = null;
+        
+        String codigo = CODIGO.getText().trim().toUpperCase();
+        String descripcion = DESCRIPCION.getText().trim();
+        Long recibos = Long.parseLong(RECIBOS.getText().trim());
+                
+        fp = new Fpago(codigo, descripcion, recibos);
+                
+        return fp; 
+    }
+    
+    
+    public boolean EliminarSIoNo()
+    {
+        int respuesta = JOptionPane.showConfirmDialog(this, "¿Estas seguro de eliminar la forma de pago?",
+                                                            "",
+                                                            JOptionPane.YES_NO_OPTION);
+        
+        if (respuesta == JOptionPane.YES_OPTION) 
+        {
+            return true;
+        }
+        return false;
+    }
+    
+    public void limpiarCampos()
+    {
+        CODIGO.setText("");
+        DESCRIPCION.setText("");
+        RECIBOS.setText("");
+    }
     //findall 
     //findallranger
 }
