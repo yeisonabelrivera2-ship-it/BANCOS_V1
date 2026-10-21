@@ -463,7 +463,8 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
         jTextFieldNumero.setText(jTablePrestamos.getValueAt(seleccionado, 0).toString());
         jTextFieldFecha.setText(jTablePrestamos.getValueAt(seleccionado, 1).toString());
         jTextFieldImporte.setText(jTablePrestamos.getValueAt(seleccionado, 2).toString());
-        jComboBoxFormasPago.setToolTipText(jTablePrestamos.getValueAt(seleccionado, 3).toString());
+        jTextFieldImporteRecibo.setText(jTablePrestamos.getValueAt(seleccionado, 3).toString());
+        jComboBoxFormasPago.setToolTipText(jTablePrestamos.getValueAt(seleccionado, 4).toString());
 
     }
     
