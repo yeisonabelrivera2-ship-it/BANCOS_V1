@@ -45,6 +45,7 @@ public class RecibosController {
         return listaRecibos;
     }
     
+    
     public int deleteById(String id)
     {
         int filasAfectadas = 0;
@@ -61,6 +62,7 @@ public class RecibosController {
         
         return filasAfectadas;
     }
+    
     
     public int generarRecibos(String id){
         
