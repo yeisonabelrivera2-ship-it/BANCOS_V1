@@ -47,7 +47,7 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
         jTextFieldImporteRecibo = new javax.swing.JTextField();
         jButtonReadById = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
-        jTextFieldImporte1 = new javax.swing.JTextField();
+        jTextFieldImporte = new javax.swing.JTextField();
         jComboBoxFormasPago = new javax.swing.JComboBox<>();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTableRecibos = new javax.swing.JTable();
@@ -84,6 +84,7 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
         jButtonRead.setFocusable(false);
         jButtonRead.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonRead.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButtonRead.addActionListener(this::jButtonReadActionPerformed);
         jToolBar1.add(jButtonRead);
 
         jScrollPane1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
@@ -99,6 +100,11 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        jTablePrestamos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTablePrestamosMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTablePrestamos);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
@@ -118,7 +124,7 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
         jLabel4.setText("Fecha");
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel5.setText("Importe");
+        jLabel5.setText("Importe Prestamo");
 
         jTextFieldNumero.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
@@ -134,7 +140,7 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel6.setText("Importe Recibo");
 
-        jTextFieldImporte1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jTextFieldImporte.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         jComboBoxFormasPago.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jComboBoxFormasPago.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
@@ -150,7 +156,7 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -162,7 +168,7 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
                                 .addComponent(jTextFieldNumero, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(jButtonReadById, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addComponent(jTextFieldImporte1, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jTextFieldImporte, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jComboBoxFormasPago, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
@@ -183,7 +189,7 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextFieldImporte1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextFieldImporte, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -272,12 +278,26 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
             }
             
             cargarTablaBuscado(prBuscado);
+            
         } 
         catch (NumberFormatException e) 
         {
             JOptionPane.showMessageDialog(this, "ERROR: " + e.getMessage());
         }
     }//GEN-LAST:event_jButtonReadByIdActionPerformed
+
+    private void jTablePrestamosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTablePrestamosMouseClicked
+        // TODO add your handling code here:
+        cargarCampos();
+    }//GEN-LAST:event_jTablePrestamosMouseClicked
+
+    private void jButtonReadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonReadActionPerformed
+        // TODO add your handling code here:
+        
+        ArrayList<Prestamos> lista = controlador.readAll();
+        cargarTabla(lista);
+        
+    }//GEN-LAST:event_jButtonReadActionPerformed
     
     /**
      * @param args the command line arguments
@@ -338,7 +358,7 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
     private javax.swing.JTable jTablePrestamos;
     private javax.swing.JTable jTableRecibos;
     private javax.swing.JTextField jTextFieldFecha;
-    private javax.swing.JTextField jTextFieldImporte1;
+    private javax.swing.JTextField jTextFieldImporte;
     private javax.swing.JTextField jTextFieldImporteRecibo;
     private javax.swing.JTextField jTextFieldNumero;
     private javax.swing.JToolBar jToolBar1;
@@ -351,16 +371,18 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
             
             modelo.addColumn("Numero");
             modelo.addColumn("Fecha");
-            modelo.addColumn("Importe");
+            modelo.addColumn("Importe prestamo");
+            modelo.addColumn("Importe recibo");
             modelo.addColumn("Forma de pago");
             
             for (Prestamos pr : lista) 
             {
-                Object[] fila = new Object[4];
+                Object[] fila = new Object[5];
                         fila[0] = pr.getNumPrest();
                         fila[1] = pr.getFecPrest();
                         fila[2] = pr.getImpPrest();
-                        fila[3] = pr.getCodFPago();
+                        fila[3] = pr.getImpReci();
+                        fila[4] = pr.getCodFPago();
                 modelo.addRow(fila);
             }
         jTablePrestamos.setModel(modelo);
@@ -372,15 +394,17 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
             
             modelo.addColumn("Numero");
             modelo.addColumn("Fecha");
-            modelo.addColumn("Importe");
+            modelo.addColumn("Importe prestamo");
+            modelo.addColumn("Importe recibo");
             modelo.addColumn("Forma de pago");
             
             
-                Object[] fila = new Object[4];
+                Object[] fila = new Object[5];
                         fila[0] = ps.getNumPrest();
                         fila[1] = ps.getFecPrest();
                         fila[2] = ps.getImpPrest();
-                        fila[3] = ps.getCodFPago();
+                        fila[3] = ps.getImpReci();
+                        fila[4] = ps.getCodFPago();
                 modelo.addRow(fila);
             
         jTablePrestamos.setModel(modelo);
@@ -430,10 +454,25 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
     {
         int seleccionado = jTablePrestamos.getSelectedRow();
         
-        
-            
+        if (seleccionado == -1) 
+        {
+            JOptionPane.showMessageDialog(this, "No hay ninguna fila seleccionada");
+            return;
         }
+        
+        jTextFieldNumero.setText(jTablePrestamos.getValueAt(seleccionado, 0).toString());
+        jTextFieldFecha.setText(jTablePrestamos.getValueAt(seleccionado, 1).toString());
+        jTextFieldImporte.setText(jTablePrestamos.getValueAt(seleccionado, 2).toString());
+        jComboBoxFormasPago.setToolTipText(jTablePrestamos.getValueAt(seleccionado, 3).toString());
+
     }
+    
+    public void cargarCamposBuscado(Prestamos ps)
+    {
+        
+    }
+    
+}
 
 
 

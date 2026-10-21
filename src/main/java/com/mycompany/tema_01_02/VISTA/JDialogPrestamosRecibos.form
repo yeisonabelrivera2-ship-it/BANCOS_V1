@@ -134,6 +134,9 @@
             <Property name="horizontalTextPosition" type="int" value="0"/>
             <Property name="verticalTextPosition" type="int" value="3"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonReadActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
@@ -159,6 +162,9 @@
               </Table>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jTablePrestamosMouseClicked"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
@@ -181,7 +187,7 @@
                       <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="1" max="-2" attributes="0">
                               <Component id="jLabel6" alignment="0" max="32767" attributes="0"/>
-                              <Component id="jLabel2" alignment="0" pref="122" max="32767" attributes="0"/>
+                              <Component id="jLabel2" alignment="0" max="32767" attributes="0"/>
                               <Component id="jLabel5" alignment="0" max="32767" attributes="0"/>
                               <Component id="jLabel4" alignment="0" max="32767" attributes="0"/>
                               <Component id="jLabel3" alignment="0" max="32767" attributes="0"/>
@@ -195,7 +201,7 @@
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
                                   <Component id="jButtonReadById" max="32767" attributes="0"/>
                               </Group>
-                              <Component id="jTextFieldImporte1" alignment="1" max="32767" attributes="0"/>
+                              <Component id="jTextFieldImporte" alignment="1" max="32767" attributes="0"/>
                               <Component id="jComboBoxFormasPago" max="32767" attributes="0"/>
                           </Group>
                       </Group>
@@ -223,7 +229,7 @@
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabel5" alignment="3" min="-2" pref="34" max="-2" attributes="0"/>
-                      <Component id="jTextFieldImporte1" alignment="3" min="-2" pref="34" max="-2" attributes="0"/>
+                      <Component id="jTextFieldImporte" alignment="3" min="-2" pref="34" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
@@ -284,7 +290,7 @@
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Segoe UI" size="14" style="1"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Importe"/>
+            <Property name="text" type="java.lang.String" value="Importe Prestamo"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="jTextFieldNumero">
@@ -338,7 +344,7 @@
             <Property name="text" type="java.lang.String" value="Importe Recibo"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="jTextFieldImporte1">
+        <Component class="javax.swing.JTextField" name="jTextFieldImporte">
           <Properties>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.BevelBorderInfo">
