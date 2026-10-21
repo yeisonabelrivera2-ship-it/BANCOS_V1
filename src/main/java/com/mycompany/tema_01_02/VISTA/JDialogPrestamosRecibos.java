@@ -1,6 +1,8 @@
 package com.mycompany.tema_01_02.VISTA;
 
+import com.mycompany.tema_01_02.CONTROLADOR.FpagoController;
 import com.mycompany.tema_01_02.CONTROLADOR.PrestamosController;
+import com.mycompany.tema_01_02.MODELO.Fpago;
 import com.mycompany.tema_01_02.MODELO.Prestamos;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -13,15 +15,33 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(JDialogPrestamosRecibos.class.getName());
 
     private PrestamosController controlador;
+    private FpagoController FPcontrolador;
     
     public JDialogPrestamosRecibos(java.awt.Frame parent, boolean modal, Connection con) {
         super(parent, modal);
         initComponents();
         controlador = new PrestamosController(con);
+        FPcontrolador = new FpagoController(con);
         
        
         ArrayList<Prestamos> lista = controlador.readAll();
         cargarTabla(lista);
+        
+        try 
+        {
+            ArrayList<Fpago> listaFpago = FPcontrolador.readAll();
+            jComboBoxFormasPago.removeAllItems();
+            for (Fpago fp : listaFpago)
+            {
+                jComboBoxFormasPago.addItem(fp.getCCODFPAGO());
+            }
+        } 
+        catch (SQLException e) 
+        {
+            JOptionPane.showMessageDialog(this, "ERROR: " + e.getMessage());
+        }
+        
+        
     }
 
     
@@ -464,8 +484,30 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
         jTextFieldFecha.setText(jTablePrestamos.getValueAt(seleccionado, 1).toString());
         jTextFieldImporte.setText(jTablePrestamos.getValueAt(seleccionado, 2).toString());
         jTextFieldImporteRecibo.setText(jTablePrestamos.getValueAt(seleccionado, 3).toString());
-        jComboBoxFormasPago.setToolTipText(jTablePrestamos.getValueAt(seleccionado, 4).toString());
+        String formaPago = jTablePrestamos.getValueAt(seleccionado, 4).toString();
+        jComboBoxFormasPago.setSelectedItem(formaPago);
 
+    }
+    
+    
+    public void cargarComboFormasPago()
+    {
+        try
+        {
+            ArrayList<Fpago> listaFp = FPcontrolador.readAll();
+
+            jComboBoxFormasPago.removeAllItems();
+
+            for (Fpago fp : listaFp)
+            {
+                jComboBoxFormasPago.addItem(fp.getCCODFPAGO());
+            }
+        }
+        catch (SQLException e)
+        {
+            JOptionPane.showMessageDialog(this,
+                    "Error al cargar formas de pago: " + e.getMessage());
+        }
     }
     
     public void cargarCamposBuscado(Prestamos ps)

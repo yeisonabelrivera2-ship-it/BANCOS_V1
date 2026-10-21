@@ -14,16 +14,16 @@ public class JDialogFpago extends javax.swing.JDialog {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(JDialogFpago.class.getName());
 
-    private FpagoController controlador;
+    private FpagoController FPcontrolador;
     
     public JDialogFpago(java.awt.Frame parent, boolean modal, Connection con) {
         super(parent, modal);
         initComponents();
-        controlador = new FpagoController(con);
+        FPcontrolador = new FpagoController(con);
         
         try 
         {
-            ArrayList<Fpago> lista = controlador.readAll();
+            ArrayList<Fpago> lista = FPcontrolador.readAll();
             CargarTabla(lista);
         } 
         catch (SQLException e) 
@@ -229,7 +229,7 @@ public class JDialogFpago extends javax.swing.JDialog {
         
         try 
         {
-            ArrayList<Fpago> lista = controlador.readAll();
+            ArrayList<Fpago> lista = FPcontrolador.readAll();
             
             if (lista.isEmpty()) 
             {
@@ -256,7 +256,7 @@ public class JDialogFpago extends javax.swing.JDialog {
         try 
         {
             String id = JTextFieldReadID.getText().trim().toUpperCase();
-            Fpago fpBuscado = controlador.readById(id);
+            Fpago fpBuscado = FPcontrolador.readById(id);
             
             if (fpBuscado == null) 
             {
@@ -297,9 +297,9 @@ public class JDialogFpago extends javax.swing.JDialog {
             }
             
             Fpago nuevo = new Fpago(codigo, descripcion, recibos);
-            controlador.create(nuevo);
+            FPcontrolador.create(nuevo);
             
-            ArrayList<Fpago> lista = controlador.readAll();
+            ArrayList<Fpago> lista = FPcontrolador.readAll();
             
             if (lista.isEmpty()) 
             {
@@ -341,11 +341,11 @@ public class JDialogFpago extends javax.swing.JDialog {
                 return;
             }
             
-            int filasAfectadas = controlador.deleteById(fpEliminado.getCCODFPAGO());
+            int filasAfectadas = FPcontrolador.deleteById(fpEliminado.getCCODFPAGO());
             limpiarCampos();
             JOptionPane.showMessageDialog(this, "Eliminado correctamente" );
             
-            ArrayList<Fpago> lista = controlador.readAll();
+            ArrayList<Fpago> lista = FPcontrolador.readAll();
             
             if (lista.isEmpty()) 
             {
