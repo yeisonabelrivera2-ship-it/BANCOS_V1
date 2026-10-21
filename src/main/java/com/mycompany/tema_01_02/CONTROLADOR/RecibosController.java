@@ -69,13 +69,12 @@ public class RecibosController {
         String sql = "{CALL sp_GENERARRECIBOS(?, ?)}";
         
         try (CallableStatement cs = con.prepareCall(sql)){
-            
-            
+
             cs.setString(1, id);
             cs.registerOutParameter(2, INTEGER);
             
             cs.execute();
-            
+
             resultado = cs.getInt(2);
             
         } catch (SQLException ex) {
