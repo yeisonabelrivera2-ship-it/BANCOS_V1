@@ -42,7 +42,7 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jTextFieldCodigo = new javax.swing.JTextField();
+        jTextFieldNumero = new javax.swing.JTextField();
         jTextFieldFecha = new javax.swing.JTextField();
         jTextFieldImporte = new javax.swing.JTextField();
         jComboBoxFormasPago = new javax.swing.JComboBox<>();
@@ -60,6 +60,7 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
         jButtonCreate.setFocusable(false);
         jButtonCreate.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonCreate.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButtonCreate.addActionListener(this::jButtonCreateActionPerformed);
         jToolBar1.add(jButtonCreate);
 
         jButtonDelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/eliminar.png"))); // NOI18N
@@ -109,7 +110,7 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
         jLabel2.setText("Formas de Pago");
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel3.setText("Codigo");
+        jLabel3.setText("Numero");
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel4.setText("Fecha");
@@ -117,7 +118,7 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel5.setText("Importe");
 
-        jTextFieldCodigo.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jTextFieldNumero.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         jTextFieldFecha.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
@@ -126,8 +127,10 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
         jComboBoxFormasPago.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jComboBoxFormasPago.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
+        jButtonReadById.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButtonReadById.setText("Buscar");
         jButtonReadById.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButtonReadById.addActionListener(this::jButtonReadByIdActionPerformed);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -149,7 +152,7 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
                             .addComponent(jComboBoxFormasPago, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jTextFieldFecha)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jTextFieldCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jTextFieldNumero, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(jButtonReadById, javax.swing.GroupLayout.DEFAULT_SIZE, 131, Short.MAX_VALUE)))))
                 .addContainerGap())
@@ -162,7 +165,7 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
                 .addGap(27, 27, 27)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextFieldCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldNumero, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonReadById, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -227,6 +230,41 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButtonCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCreateActionPerformed
+        // TODO add your handling code here:
+        
+        
+        
+        
+    }//GEN-LAST:event_jButtonCreateActionPerformed
+
+    private void jButtonReadByIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonReadByIdActionPerformed
+        // TODO add your handling code here:
+        
+        if (validarBusquedaId() == false) 
+        {
+            return;
+        }
+        
+        try 
+        {
+            int numero = Integer.parseInt(jTextFieldNumero.getText().trim().toUpperCase());
+            Prestamos prBuscado = controlador.readById(numero);
+            
+            if (prBuscado == null) 
+            {
+                JOptionPane.showMessageDialog(this, "No existe el prestamo introducido");
+                return;
+            }
+            
+            cargarTablaBuscado(prBuscado);
+        } 
+        catch (NumberFormatException e) 
+        {
+            JOptionPane.showMessageDialog(this, "ERROR: " + e.getMessage());
+        }
+    }//GEN-LAST:event_jButtonReadByIdActionPerformed
     
     /**
      * @param args the command line arguments
@@ -285,9 +323,9 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTablePrestamos;
     private javax.swing.JTable jTableRecibos;
-    private javax.swing.JTextField jTextFieldCodigo;
     private javax.swing.JTextField jTextFieldFecha;
     private javax.swing.JTextField jTextFieldImporte;
+    private javax.swing.JTextField jTextFieldNumero;
     private javax.swing.JToolBar jToolBar1;
     // End of variables declaration//GEN-END:variables
 
@@ -312,6 +350,65 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
             }
         jTablePrestamos.setModel(modelo);
     }
+    
+    public void cargarTablaBuscado(Prestamos ps)
+    {
+        DefaultTableModel modelo = new DefaultTableModel();
+            
+            modelo.addColumn("Numero");
+            modelo.addColumn("Fecha");
+            modelo.addColumn("Importe");
+            modelo.addColumn("Forma de pago");
+            
+            
+                Object[] fila = new Object[4];
+                        fila[0] = ps.getNumPrest();
+                        fila[1] = ps.getFecPrest();
+                        fila[2] = ps.getImpPrest();
+                        fila[3] = ps.getCodFPago();
+                modelo.addRow(fila);
+            
+        jTablePrestamos.setModel(modelo);
+    }
 
+    
+    public boolean validarBusquedaId()
+    {
+        String numeroTexto = jTextFieldNumero.getText().trim();
+        
+        if (numeroTexto.isEmpty()) 
+        {
+            JOptionPane.showMessageDialog(this, "El campo numero esta vacio");
+            return false;
+        }
+        if (numeroTexto.length() > 10) 
+        {
+            JOptionPane.showMessageDialog(this, "El campo esta vacio");
+            return false;
+        }
+        
+        try 
+        {
+            int numero = Integer.parseInt(numeroTexto);
+            
+            if (numero < 0) 
+            {
+                JOptionPane.showMessageDialog(this, "El campo numero no puede ser negativo");
+                return false;
+            }
+            if (numero > 2147483647) 
+            {
+                JOptionPane.showMessageDialog(this, "El campo numero no puede ser mayor de 2147483647");
+                return false;
+            }
+        } 
+        catch (NumberFormatException e) 
+        {
+            JOptionPane.showMessageDialog(this, "ERROR: " + e.getMessage());
+            return false;
+        }
+        return true;
+    }
+    
 
 }

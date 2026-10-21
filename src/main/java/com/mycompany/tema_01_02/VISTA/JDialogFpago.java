@@ -74,7 +74,6 @@ public class JDialogFpago extends javax.swing.JDialog {
         JButtonUpdate.setFocusable(false);
         JButtonUpdate.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         JButtonUpdate.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        JButtonUpdate.addActionListener(this::JButtonUpdateActionPerformed);
         jToolBar1.add(JButtonUpdate);
 
         JButtonDelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/eliminar.png"))); // NOI18N
@@ -367,53 +366,6 @@ public class JDialogFpago extends javax.swing.JDialog {
         
         seleccionarTabla();
     }//GEN-LAST:event_JTableTablaMouseClicked
-
-    private void JButtonUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonUpdateActionPerformed
-        // TODO add your handling code here:
-        
-      
-        if (pkNoModificada() == false) 
-        {
-            return;
-        }
-        if (validarAñadirFpago() == false) 
-        {
-            return;
-        }
-        if (ActualizarSIoNo() == false) 
-        {
-            return;
-        }
-        
-        try 
-        {
-            Fpago fpModificado = obneterFpago();
-            int filasAfectadas = controlador.update(fpModificado);
-            
-            if (filasAfectadas > 0) 
-            {
-                JOptionPane.showMessageDialog(this,"El método de pago se ha modificado correctamente");
-                
-                ArrayList<Fpago> lista = controlador.readAll();
-            
-                if (lista.isEmpty()) 
-                {
-                    JOptionPane.showMessageDialog(this, "La lista esta vacia");
-                }
-            
-                CargarTabla(lista);
-            } 
-            else 
-            {
-                JOptionPane.showMessageDialog(this,"No se ha modificado ningún registro. Comprueba el código.");
-            }
-        } 
-        catch (Exception e) 
-        {
-            JOptionPane.showMessageDialog(this, "ERROR: " + e.getMessage());
-        }
-        
-    }//GEN-LAST:event_JButtonUpdateActionPerformed
 
     /**
      * @param args the command line arguments
