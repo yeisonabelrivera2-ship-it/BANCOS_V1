@@ -86,5 +86,27 @@ public class RecibosController {
         return resultado;
     }
     
+    public boolean tieneRecibosPagados(int numPrest) {
+            String sql = "SELECT COUNT(*) FROM recibos WHERE nNumPrest = ? AND dFecPago IS NOT NULL";
+
+            try (PreparedStatement st = con.prepareStatement(sql)) {
+                st.setInt(1, numPrest);
+
+                ResultSet rs = st.executeQuery();
+
+                if (rs.next()) {
+                    int totalPagados = rs.getInt(1);
+
+                    if (totalPagados > 0) {
+                        return true;
+                    }
+                }
+            } catch  (SQLException e) {
+                 e.printStackTrace();
+            }
+            
+            return false;
+        }
+    
     
 }
