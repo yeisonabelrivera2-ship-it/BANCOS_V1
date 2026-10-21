@@ -1,7 +1,12 @@
 package com.mycompany.tema_01_02.VISTA;
 
 import com.mycompany.tema_01_02.CONTROLADOR.PrestamosController;
+import com.mycompany.tema_01_02.MODELO.Prestamos;
 import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 public class JDialogPrestamosRecibos extends javax.swing.JDialog {
     
@@ -13,6 +18,10 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         controlador = new PrestamosController(con);
+        
+       
+        ArrayList<Prestamos> lista = controlador.readAll();
+        cargarTabla(lista);
     }
 
     
@@ -281,4 +290,28 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
     private javax.swing.JTextField jTextFieldImporte;
     private javax.swing.JToolBar jToolBar1;
     // End of variables declaration//GEN-END:variables
+
+    
+    public void cargarTabla(ArrayList<Prestamos> lista)
+    {
+        DefaultTableModel modelo = new DefaultTableModel();
+            
+            modelo.addColumn("Numero");
+            modelo.addColumn("Fecha");
+            modelo.addColumn("Importe");
+            modelo.addColumn("Forma de pago");
+            
+            for (Prestamos pr : lista) 
+            {
+                Object[] fila = new Object[4];
+                        fila[0] = pr.getNumPrest();
+                        fila[1] = pr.getFecPrest();
+                        fila[2] = pr.getImpPrest();
+                        fila[3] = pr.getCodFPago();
+                modelo.addRow(fila);
+            }
+        jTablePrestamos.setModel(modelo);
+    }
+
+
 }
