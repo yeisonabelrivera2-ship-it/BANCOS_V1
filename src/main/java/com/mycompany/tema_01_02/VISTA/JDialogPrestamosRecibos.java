@@ -298,6 +298,7 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
             }
             
             cargarTablaBuscado(prBuscado);
+            cargarCampos();
             
         } 
         catch (NumberFormatException e) 
@@ -309,6 +310,7 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
     private void jTablePrestamosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTablePrestamosMouseClicked
         // TODO add your handling code here:
         cargarCampos();
+        
     }//GEN-LAST:event_jTablePrestamosMouseClicked
 
     private void jButtonReadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonReadActionPerformed
@@ -484,8 +486,25 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
         jTextFieldFecha.setText(jTablePrestamos.getValueAt(seleccionado, 1).toString());
         jTextFieldImporte.setText(jTablePrestamos.getValueAt(seleccionado, 2).toString());
         jTextFieldImporteRecibo.setText(jTablePrestamos.getValueAt(seleccionado, 3).toString());
-        String formaPago = jTablePrestamos.getValueAt(seleccionado, 4).toString();
-        jComboBoxFormasPago.setSelectedItem(formaPago);
+        String codigo = jTablePrestamos.getValueAt(seleccionado, 4).toString();
+
+        try 
+        {
+            ArrayList<Fpago> lista = FPcontrolador.readAll();
+
+            for (Fpago fp : lista) 
+            {
+                if (fp.getCCODFPAGO().equalsIgnoreCase(codigo)) 
+                {
+                    jComboBoxFormasPago.setSelectedItem(fp.toString());
+                    break;
+                }
+            }
+        }   
+        catch (SQLException e) 
+        {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
 
     }
     
