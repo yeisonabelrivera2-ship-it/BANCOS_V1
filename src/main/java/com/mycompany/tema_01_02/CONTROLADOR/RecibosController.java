@@ -5,6 +5,9 @@ import com.mycompany.tema_01_02.MODELO.Recibos;
 import java.sql.*;
 import java.util.ArrayList;
 
+
+// DELETEBYID, FindByID,
+
 public class RecibosController {
     
     private Connection con;
@@ -15,7 +18,6 @@ public class RecibosController {
     }
     
     public ArrayList<Recibos> findById(String id){
-        
         ArrayList<Recibos> listaRecibos = new ArrayList<>();
         
         String sql = "SELECT NNUMPREST, NNUMRECIB, DFECREC, NIMPREC, DFECPAGO FROM RECIBOS WHERE NNUMPREST = ?;";
@@ -45,4 +47,19 @@ public class RecibosController {
     }
     
     
+    public int deleteById(int numPrest, int numRecib) {
+        int filasAfectadas = 0;
+        String sql = "DELETE FROM RECIBOS WHERE NNUMPREST = ? AND NNUMRECIB = ?";
+
+        try (PreparedStatement st = con.prepareStatement(sql)) {
+            st.setInt(1, numPrest);
+            st.setInt(2, numRecib);
+
+            filasAfectadas = st.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println("Error al eliminar el recibo");
+            ex.printStackTrace();
+        }
+        return filasAfectadas;
+    }
 }
