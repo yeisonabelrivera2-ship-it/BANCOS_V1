@@ -1,6 +1,6 @@
 package com.mycompany.tema_01_02.CONTROLADOR;
 
-import com.mycompany.tema_01_02.MODELO.Prestamos;
+import com.mycompany.tema_01_02.MODELO.*;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -16,14 +16,14 @@ public class PrestamosController {
     }
 
     
-    public ArrayList<Prestamos> readAll() {
-            ArrayList<Prestamos> lista = new ArrayList<>();
+    public ArrayList<Prestamo> readAll() {
+            ArrayList<Prestamo> lista = new ArrayList<>();
             String sql = "SELECT NNUMPREST, DFECPREST, NIMPPREST, NIMPRECI, CCODFPAGO FROM PRESTAMOS";
 
             try (PreparedStatement st = con.prepareStatement(sql);
                  ResultSet rs = st.executeQuery()) {
                 while (rs.next()) {
-                    Prestamos p = new Prestamos(
+                    Prestamo p = new Prestamo(
                         rs.getInt("NNUMPREST"),
                         rs.getDate("DFECPREST").toLocalDate(),
                         rs.getDouble("NIMPPREST"),
@@ -39,8 +39,8 @@ public class PrestamosController {
         }
     
     
-    public Prestamos readById(int id) {
-        Prestamos p = null;
+    public Prestamo readById(int id) {
+        Prestamo p = null;
         String sql = "SELECT NNUMPREST, DFECPREST, NIMPPREST, NIMPRECI, CCODFPAGO FROM PRESTAMOS WHERE NNUMPREST = ?";
 
         try (PreparedStatement st = con.prepareStatement(sql)) {
@@ -48,7 +48,7 @@ public class PrestamosController {
 
             try (ResultSet rs = st.executeQuery()) {
                 if (rs.next()) {
-                    p = new Prestamos(
+                    p = new Prestamo(
                             rs.getInt("NNUMPREST"),
                             rs.getDate("DFECPREST").toLocalDate(),
                             rs.getDouble("NIMPPREST"),
@@ -64,7 +64,7 @@ public class PrestamosController {
     }
     
     
-    public int create(Prestamos p) {
+    public int create(Prestamo p) {
         int filasAfectadas = 0;
         String sql = "INSERT INTO PRESTAMOS(NNUMPREST, DFECPREST, NIMPPREST, NIMPRECI, CCODFPAGO) VALUES(?, ?, ?, ?, ?)";
 
@@ -97,7 +97,7 @@ public class PrestamosController {
     }
 
     
-    public int update(Prestamos p) {
+    public int update(Prestamo p) {
         int filasAfectadas = 0;
         String sql = "UPDATE PRESTAMOS SET DFECPREST = ?, NIMPPREST = ?, NIMPRECI = ?, CCODFPAGO = ? WHERE NNUMPREST = ?";
 
