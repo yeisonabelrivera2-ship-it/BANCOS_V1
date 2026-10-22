@@ -96,6 +96,7 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
         jButtonDelete.setFocusable(false);
         jButtonDelete.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonDelete.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButtonDelete.addActionListener(this::jButtonDeleteActionPerformed);
         jToolBar1.add(jButtonDelete);
 
         jButtonUpdate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/modificar.png"))); // NOI18N
@@ -105,7 +106,7 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
         jButtonUpdate.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jToolBar1.add(jButtonUpdate);
 
-        jButtonRead.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/buscar.png"))); // NOI18N
+        jButtonRead.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/readAllback.png"))); // NOI18N
         jButtonRead.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonRead.setFocusable(false);
         jButtonRead.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -159,7 +160,7 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
         jTextFieldImporteRecibo.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         jButtonReadById.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButtonReadById.setText("Buscar");
+        jButtonReadById.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/buscar.png"))); // NOI18N
         jButtonReadById.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonReadById.addActionListener(this::jButtonReadByIdActionPerformed);
 
@@ -191,9 +192,9 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
                             .addComponent(jTextFieldImporteRecibo)
                             .addComponent(jTextFieldFecha)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jTextFieldNumero, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jButtonReadById, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(jTextFieldNumero)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButtonReadById, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jTextFieldImporte, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jComboBoxFormasPago, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
@@ -207,7 +208,7 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jTextFieldNumero, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButtonReadById, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jButtonReadById, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -335,6 +336,31 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
         cargarTablaPrestamos(lista);
         
     }//GEN-LAST:event_jButtonReadActionPerformed
+
+    private void jButtonDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeleteActionPerformed
+        // TODO add your handling code here:
+        
+        if (cargarCamposTabla() == false) 
+        {
+            return;
+        }
+        if (validarBusquedaId() == false) 
+        {
+            return;
+        }
+        if (EliminarSioNo() == false) 
+        {
+            return;
+        }
+        //se debe añadir la validacion de recibos
+        
+        int id = Integer.parseInt(jTextFieldNumero.getText().trim());
+        JOptionPane.showMessageDialog(this, "ELIMINADO CORRECTAMENTE");
+        limpiarCampos();
+        //se debe cargar la tabla para actualizar la nueva lista
+        //int filasAfectadas = PScontrolador.deleteById(id);
+        
+    }//GEN-LAST:event_jButtonDeleteActionPerformed
     
     /**
      * @param args the command line arguments
@@ -511,14 +537,14 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
     }
     
     
-    public void cargarCamposTabla()
+    public boolean cargarCamposTabla()
     {
         int seleccionado = jTablePrestamos.getSelectedRow();
         
         if (seleccionado == -1) 
         {
             JOptionPane.showMessageDialog(this, "No hay ninguna fila seleccionada");
-            return;
+            return false;
         }
         
         jTextFieldNumero.setText(jTablePrestamos.getValueAt(seleccionado, 0).toString());
@@ -527,6 +553,7 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
         jTextFieldImporteRecibo.setText(jTablePrestamos.getValueAt(seleccionado, 3).toString());
         String codigo = jTablePrestamos.getValueAt(seleccionado, 4).toString();
         jComboBoxFormasPago.setSelectedItem(codigo);
+        return true;
     }
     
     
@@ -566,6 +593,27 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
         jComboBoxFormasPago.setSelectedItem(codigo);
     }
     
+    public boolean EliminarSioNo()
+    {
+        int respuesta = JOptionPane.showConfirmDialog(this, "¿Deseas eliminar el prestamo?",
+                                            "Eliminar",
+                                            JOptionPane.YES_NO_OPTION);
+        
+        if (respuesta == JOptionPane.YES_OPTION) 
+        {
+            return true;
+        }
+        return false;
+    }
+    
+    public void limpiarCampos()
+    {
+        jTextFieldNumero.setText("");
+        jTextFieldFecha.setText("");
+        jTextFieldImporte.setText("");
+        jTextFieldImporteRecibo.setText("");
+        jComboBoxFormasPago.setSelectedItem("");
+    }
 }
 
 

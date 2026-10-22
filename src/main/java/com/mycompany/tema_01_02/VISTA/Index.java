@@ -54,7 +54,8 @@ public class Index extends javax.swing.JFrame {
         jToolBar1.setRollover(true);
 
         FORMASPAGO.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        FORMASPAGO.setText("Formas de Pago");
+        FORMASPAGO.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/formasDePago.png"))); // NOI18N
+        FORMASPAGO.setText("     Formas de Pago    ");
         FORMASPAGO.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         FORMASPAGO.setFocusable(false);
         FORMASPAGO.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -63,7 +64,8 @@ public class Index extends javax.swing.JFrame {
         jToolBar1.add(FORMASPAGO);
 
         jButtonPrestamos.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButtonPrestamos.setText("Prestamos");
+        jButtonPrestamos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/PrestamosRecibos.png"))); // NOI18N
+        jButtonPrestamos.setText(" Prestamos y Recibos ");
         jButtonPrestamos.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonPrestamos.setFocusable(false);
         jButtonPrestamos.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -88,8 +90,8 @@ public class Index extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(131, 131, 131)
+                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(83, 83, 83)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 186, Short.MAX_VALUE))
         );

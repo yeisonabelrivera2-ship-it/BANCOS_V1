@@ -84,7 +84,7 @@ public class JDialogFpago extends javax.swing.JDialog {
         JButtonDelete.addActionListener(this::JButtonDeleteActionPerformed);
         jToolBar1.add(JButtonDelete);
 
-        JButtonRead.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/buscar.png"))); // NOI18N
+        JButtonRead.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/readAllback.png"))); // NOI18N
         JButtonRead.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         JButtonRead.setFocusable(false);
         JButtonRead.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -92,7 +92,7 @@ public class JDialogFpago extends javax.swing.JDialog {
         JButtonRead.addActionListener(this::JButtonReadActionPerformed);
         jToolBar1.add(JButtonRead);
 
-        JButtonReadByID.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/searchById.jpg"))); // NOI18N
+        JButtonReadByID.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/buscar.png"))); // NOI18N
         JButtonReadByID.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         JButtonReadByID.setFocusable(false);
         JButtonReadByID.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
