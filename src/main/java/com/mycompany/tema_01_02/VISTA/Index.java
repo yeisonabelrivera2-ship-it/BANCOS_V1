@@ -139,6 +139,65 @@ public class Index extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
+      // 1. Solo el azul de acento (aros de foco y selecciones)
+    java.util.Map<String, String> colores = new java.util.HashMap<>();
+    colores.put("@accentColor", "#007AFF");
+    com.formdev.flatlaf.FlatLaf.setGlobalExtraDefaults(colores);
+
+    // 2. Barra de título integrada con la ventana (opcional)
+    javax.swing.JFrame.setDefaultLookAndFeelDecorated(true);
+    javax.swing.JDialog.setDefaultLookAndFeelDecorated(true);
+
+    // 3. Tema
+    com.formdev.flatlaf.themes.FlatMacLightLaf.setup();
+
+    // 4. Fuente: la más "Apple" que haya instalada
+    String familia = "SansSerif";
+    java.util.List<String> instaladas = java.util.Arrays.asList(
+        java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames());
+    for (String f : new String[]{"SF Pro Text", "Helvetica Neue", "Segoe UI"}) {
+        if (instaladas.contains(f)) { familia = f; break; }
+    }
+    javax.swing.UIManager.put("defaultFont", new java.awt.Font(familia, java.awt.Font.PLAIN, 13));
+
+    // 5. Paneles con el gris suave de Apple
+    java.awt.Color gris = new java.awt.Color(245, 247, 250);
+    javax.swing.UIManager.put("Panel.background", gris);
+    javax.swing.UIManager.put("TabbedPane.background", gris);
+    javax.swing.UIManager.put("OptionPane.background", gris);
+
+    // 6. Bordes finos y esquinas redondeadas (campos y desplegables)
+    javax.swing.UIManager.put("Component.borderColor", new java.awt.Color(210, 210, 215));
+    javax.swing.UIManager.put("TextComponent.arc", 10);
+    javax.swing.UIManager.put("ComboBox.arc", 10);
+    javax.swing.UIManager.put("Spinner.arc", 10);
+
+    // 7. Campos en blanco, con aire por dentro
+    for (String k : new String[]{"TextField", "FormattedTextField", "PasswordField",
+                                 "TextArea", "ComboBox", "Spinner", "Table"}) {
+        javax.swing.UIManager.put(k + ".background", java.awt.Color.WHITE);
+    }
+    javax.swing.UIManager.put("TextField.margin", new java.awt.Insets(3, 8, 3, 8));
+    javax.swing.UIManager.put("FormattedTextField.margin", new java.awt.Insets(3, 8, 3, 8));
+    javax.swing.UIManager.put("PasswordField.margin", new java.awt.Insets(3, 8, 3, 8));
+    javax.swing.UIManager.put("ComboBox.padding", new java.awt.Insets(3, 8, 3, 8));
+
+    // 8. Tablas limpias
+    javax.swing.UIManager.put("Table.rowHeight", 32);
+    javax.swing.UIManager.put("Table.showHorizontalLines", true);
+    javax.swing.UIManager.put("Table.showVerticalLines", false);
+    javax.swing.UIManager.put("Table.gridColor", new java.awt.Color(229, 229, 234));
+    javax.swing.UIManager.put("Table.selectionBackground", new java.awt.Color(0, 122, 255));
+    javax.swing.UIManager.put("Table.selectionForeground", java.awt.Color.WHITE);
+    javax.swing.UIManager.put("TableHeader.background", java.awt.Color.WHITE);
+    javax.swing.UIManager.put("TableHeader.bottomSeparatorColor", new java.awt.Color(210, 210, 215));
+    javax.swing.UIManager.put("TableHeader.font", new java.awt.Font(familia, java.awt.Font.BOLD, 12));
+
+    // 9. Barras de scroll finas y redondas
+    javax.swing.UIManager.put("ScrollBar.thumbArc", 999);
+    javax.swing.UIManager.put("ScrollBar.trackArc", 999);
+    javax.swing.UIManager.put("ScrollBar.thumbInsets", new java.awt.Insets(2, 2, 2, 2));
+    javax.swing.UIManager.put("ScrollBar.width", 12);
         java.awt.EventQueue.invokeLater(() -> new Index().setVisible(true));
     }
 
