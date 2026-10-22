@@ -286,66 +286,61 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCreateActionPerformed
-        // TODO add your handling code here:
-        
-        try {
-        // 1. Capturar los valores de las cajas de texto
         String numTexto = jTextFieldNumero.getText().trim();
         String fechaTexto = jTextFieldFecha.getText().trim();
         String impPrestTexto = jTextFieldImporte.getText().trim();
         String impReciTexto = jTextFieldImporteRecibo.getText().trim();
-        
-        // 2. Validar que los campos obligatorios no estén vacíos
+
         if (numTexto.isEmpty() || impPrestTexto.isEmpty() || impReciTexto.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Por favor, rellena los campos obligatorios (Número e Importes).", "Campos vacíos", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Por favor, rellena los campos obligatorios. ");
             return;
         }
 
-        // 3. Convertir los tipos de datos necesarios
-        int numPrest = Integer.parseInt(numTexto);
-        double impPrest = Double.parseDouble(impPrestTexto);
-        double impReci = Double.parseDouble(impReciTexto);
-        
-        // Si la fecha está vacía, usamos la fecha actual; si el usuario escribió una, la parseamos
-        LocalDate fecha = fechaTexto.isEmpty() ? LocalDate.now() : LocalDate.parse(fechaTexto);
-        
-        // Obtener la forma de pago seleccionada en el ComboBox
-        String codFPago = jComboBoxFormasPago.getSelectedItem().toString();
+        try {
+            int numPrest = Integer.parseInt(numTexto);
+            double impPrest = Double.parseDouble(impPrestTexto);
+            double impReci = Double.parseDouble(impReciTexto);
 
-        // 4. Crear el objeto Prestamos con la estructura de tu modelo
-        Prestamos nuevoPrestamo = new Prestamos(numPrest, fecha, impPrest, impReci, codFPago);
+            LocalDate fecha = LocalDate.parse(fechaTexto);            
+            String codFPago = jComboBoxFormasPago.getSelectedItem().toString();
 
-        // 5. Llamar al controlador y guardar el número de filas afectadas
-        int filasAfectadas = PScontrolador.create(nuevoPrestamo); 
+            if (crearSIoNo() == false) {
+                return;
+            }
 
-        // 6. Comprobar si se insertó correctamente (mayor que 0)
-        if (filasAfectadas > 0) {
-            JOptionPane.showMessageDialog(this, "¡Préstamo creado correctamente!");
-            
-            // Actualizar la tabla principal para que refleje el nuevo préstamo
-            cargarTablaPrestamos(PScontrolador.readAll());
-            
-            // Limpiar los campos del formulario
-            jTextFieldNumero.setText("");
-            jTextFieldFecha.setText("");
-            jTextFieldImporte.setText("");
-            jTextFieldImporteRecibo.setText("");
-        } else {
-            JOptionPane.showMessageDialog(this, "No se pudo crear el préstamo en la base de datos.", "Error", JOptionPane.ERROR_MESSAGE);
+            Prestamos nuevoPrestamo = new Prestamos(numPrest, fecha, impPrest, impReci, codFPago);
+            int filasAfectadas = PScontrolador.create(nuevoPrestamo);
+
+            if (filasAfectadas > 0) {
+                JOptionPane.showMessageDialog(this, "¡Prestamo creado correctamente!");
+            }
+
+            ArrayList<Prestamos> lista = PScontrolador.readAll();
+
+            if (lista.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "La lista esta vacia");
+            }
+
+            cargarTablaPrestamos(lista);
+            limpiarCampos();
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "ERROR de formato numerico: " + e.getMessage());
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "ERROR: " + e.getMessage());
         }
-
-    } catch (NumberFormatException e) {
-        JOptionPane.showMessageDialog(this, "Error de formato: El número de préstamo y los importes deben ser valores numéricos.", "Error de formato", JOptionPane.ERROR_MESSAGE);
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, "Ocurrió un error inesperado: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-    }
-
-        
     }//GEN-LAST:event_jButtonCreateActionPerformed
 
+    public boolean crearSIoNo() {
+        int respuesta = JOptionPane.showConfirmDialog(this, "¿Estas seguro de que quieres crear el prestamo","Confirmacion",JOptionPane.YES_NO_OPTION);
+
+        if (respuesta == JOptionPane.YES_OPTION) {
+            return true;
+        }
+        return false;
+    }
+    
     private void jButtonReadByIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonReadByIdActionPerformed
-        // TODO add your handling code here:
-        
         if (validarBusquedaId() == false) 
         {
             return;
@@ -377,7 +372,6 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonReadByIdActionPerformed
 
     private void jTablePrestamosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTablePrestamosMouseClicked
-        // TODO add your handling code here:
         cargarCamposTabla();
         
         
@@ -410,7 +404,6 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
         {
             return;
         }
-        //se debe añadir la validacion de recibos
         
         
         int id = Integer.parseInt(jTextFieldNumero.getText().trim());
