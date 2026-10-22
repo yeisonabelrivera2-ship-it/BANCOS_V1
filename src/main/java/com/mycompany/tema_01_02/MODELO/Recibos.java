@@ -11,6 +11,7 @@ public class Recibos {
     private int NIMPREC;
     private LocalDate DFECPAGO;
 
+    
     public Recibos() {
     }
 
