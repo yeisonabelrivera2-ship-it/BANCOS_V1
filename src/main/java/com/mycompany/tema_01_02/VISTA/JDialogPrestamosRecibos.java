@@ -49,7 +49,7 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(this, "ERROR: " + e.getMessage());
         }
         
-        
+        cargarTablaRecibosVacio();
         
     }
 
@@ -223,7 +223,7 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jTextFieldImporteRecibo, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jComboBoxFormasPago, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -277,7 +277,7 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 518, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -287,60 +287,49 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
 
     private void jButtonCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCreateActionPerformed
         // TODO add your handling code here:
-        
-        try {
-        // 1. Capturar los valores de las cajas de texto
         String numTexto = jTextFieldNumero.getText().trim();
         String fechaTexto = jTextFieldFecha.getText().trim();
         String impPrestTexto = jTextFieldImporte.getText().trim();
         String impReciTexto = jTextFieldImporteRecibo.getText().trim();
-        
-        // 2. Validar que los campos obligatorios no estén vacíos
+
         if (numTexto.isEmpty() || impPrestTexto.isEmpty() || impReciTexto.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Por favor, rellena los campos obligatorios (Número e Importes).", "Campos vacíos", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Por favor, rellena los campos obligatorios. ");
             return;
         }
 
-        // 3. Convertir los tipos de datos necesarios
-        int numPrest = Integer.parseInt(numTexto);
-        double impPrest = Double.parseDouble(impPrestTexto);
-        double impReci = Double.parseDouble(impReciTexto);
-        
-        // Si la fecha está vacía, usamos la fecha actual; si el usuario escribió una, la parseamos
-        LocalDate fecha = fechaTexto.isEmpty() ? LocalDate.now() : LocalDate.parse(fechaTexto);
-        
-        // Obtener la forma de pago seleccionada en el ComboBox
-        String codFPago = jComboBoxFormasPago.getSelectedItem().toString();
+        try {
+            int numPrest = Integer.parseInt(numTexto);
+            double impPrest = Double.parseDouble(impPrestTexto);
+            double impReci = Double.parseDouble(impReciTexto);
 
-        // 4. Crear el objeto Prestamos con la estructura de tu modelo
-        Prestamos nuevoPrestamo = new Prestamos(numPrest, fecha, impPrest, impReci, codFPago);
+            LocalDate fecha = LocalDate.parse(fechaTexto);            
+            String codFPago = jComboBoxFormasPago.getSelectedItem().toString();
 
-        // 5. Llamar al controlador y guardar el número de filas afectadas
-        int filasAfectadas = PScontrolador.create(nuevoPrestamo); 
+            if (crearSIoNo() == false) {
+                return;
+            }
 
-        // 6. Comprobar si se insertó correctamente (mayor que 0)
-        if (filasAfectadas > 0) {
-            JOptionPane.showMessageDialog(this, "¡Préstamo creado correctamente!");
-            
-            // Actualizar la tabla principal para que refleje el nuevo préstamo
-            cargarTablaPrestamos(PScontrolador.readAll());
-            
-            // Limpiar los campos del formulario
-            jTextFieldNumero.setText("");
-            jTextFieldFecha.setText("");
-            jTextFieldImporte.setText("");
-            jTextFieldImporteRecibo.setText("");
-        } else {
-            JOptionPane.showMessageDialog(this, "No se pudo crear el préstamo en la base de datos.", "Error", JOptionPane.ERROR_MESSAGE);
+            Prestamos nuevoPrestamo = new Prestamos(numPrest, fecha, impPrest, impReci, codFPago);
+            int filasAfectadas = PScontrolador.create(nuevoPrestamo);
+
+            if (filasAfectadas > 0) {
+                JOptionPane.showMessageDialog(this, "¡Prestamo creado correctamente!");
+            }
+
+            ArrayList<Prestamos> lista = PScontrolador.readAll();
+
+            if (lista.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "La lista esta vacia");
+            }
+
+            cargarTablaPrestamos(lista);
+            limpiarCampos();
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "ERROR de formato numerico: " + e.getMessage());
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "ERROR: " + e.getMessage());
         }
-
-    } catch (NumberFormatException e) {
-        JOptionPane.showMessageDialog(this, "Error de formato: El número de préstamo y los importes deben ser valores numéricos.", "Error de formato", JOptionPane.ERROR_MESSAGE);
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, "Ocurrió un error inesperado: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-    }
-
-        
     }//GEN-LAST:event_jButtonCreateActionPerformed
 
     private void jButtonReadByIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonReadByIdActionPerformed
@@ -575,6 +564,20 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
             }
         jTableRecibos.setModel(modelo);
     }
+    
+    public void cargarTablaRecibosVacio()
+    {
+        DefaultTableModel modelo = new DefaultTableModel();
+            
+            modelo.addColumn("Numero prestamo");
+            modelo.addColumn("Numero recibo");
+            modelo.addColumn("Fecha recibo");
+            modelo.addColumn("Importe recibo");
+            modelo.addColumn("fecha pago");
+            
+            
+        jTableRecibos.setModel(modelo);
+    }
 
     
     public boolean validarBusquedaId()
@@ -680,6 +683,16 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
         
         if (respuesta == JOptionPane.YES_OPTION) 
         {
+            return true;
+        }
+        return false;
+    }
+    
+    public boolean crearSIoNo() 
+    {
+        int respuesta = JOptionPane.showConfirmDialog(this, "¿Estas seguro de que quieres crear el prestamo","Confirmacion",JOptionPane.YES_NO_OPTION);
+
+        if (respuesta == JOptionPane.YES_OPTION) {
             return true;
         }
         return false;
