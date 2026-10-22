@@ -22,11 +22,13 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
     
     public JDialogPrestamosRecibos(java.awt.Frame parent, boolean modal, Connection con) {
         super(parent, modal);
+        
         initComponents();
         PScontrolador = new PrestamosController(con);
         FPcontrolador = new FpagoController(con);
         RScontrolador = new RecibosController(con);
         
+        tablaFija();
        //CARGAR TABLA PRESTAMOS
         ArrayList<Prestamos> lista = PScontrolador.readAll();
         cargarTablaPrestamos(lista);
@@ -124,7 +126,15 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
             new String [] {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jTablePrestamos.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jTablePrestamosMouseClicked(evt);
@@ -229,7 +239,15 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
             new String [] {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane2.setViewportView(jTableRecibos);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -602,6 +620,16 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
         jTextFieldImporte.setText("");
         jTextFieldImporteRecibo.setText("");
         jComboBoxFormasPago.setSelectedItem("");
+    }
+    
+    public void tablaFija()
+    {
+        jTablePrestamos.getTableHeader().setReorderingAllowed(false);
+        jTableRecibos.getTableHeader().setReorderingAllowed(false);
+        jTablePrestamos.getTableHeader().setResizingAllowed(false);
+        jTableRecibos.getTableHeader().setResizingAllowed(false);
+        jTablePrestamos.setDefaultEditor(Object.class, null);
+        jTableRecibos.setDefaultEditor(Object.class, null);
     }
 }
 

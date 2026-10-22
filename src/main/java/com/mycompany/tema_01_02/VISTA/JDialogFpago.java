@@ -19,6 +19,8 @@ public class JDialogFpago extends javax.swing.JDialog {
     public JDialogFpago(java.awt.Frame parent, boolean modal, Connection con) {
         super(parent, modal);
         initComponents();
+        tablaFija();
+        
         FPcontrolador = new FpagoController(con);
         
         try 
@@ -110,7 +112,15 @@ public class JDialogFpago extends javax.swing.JDialog {
             new String [] {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         JTableTabla.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 JTableTablaMouseClicked(evt);
@@ -644,6 +654,11 @@ public class JDialogFpago extends javax.swing.JDialog {
         JOptionPane.showMessageDialog(this, "No se puede modificar la clave primaria");
         return false;
     }
-    //findall 
-    //findallranger
+    
+    public void tablaFija()
+    {
+        JTableTabla.getTableHeader().setReorderingAllowed(false);
+        JTableTabla.getTableHeader().setResizingAllowed(false);
+        JTableTabla.setDefaultEditor(Object.class, null);
+    }
 }
