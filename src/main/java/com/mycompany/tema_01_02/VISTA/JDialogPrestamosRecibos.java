@@ -107,6 +107,7 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
         jButtonUpdate.setFocusable(false);
         jButtonUpdate.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonUpdate.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButtonUpdate.addActionListener(this::jButtonUpdateActionPerformed);
         jToolBar1.add(jButtonUpdate);
 
         jButtonRead.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/readAllback.png"))); // NOI18N
@@ -286,9 +287,7 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCreateActionPerformed
-        // TODO add your handling code here:
-        
-        try {
+     try {
         // 1. Capturar los valores de las cajas de texto
         String numTexto = jTextFieldNumero.getText().trim();
         String fechaTexto = jTextFieldFecha.getText().trim();
@@ -303,6 +302,12 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
 
         // 3. Convertir los tipos de datos necesarios
         int numPrest = Integer.parseInt(numTexto);
+        
+        // 4. VALIDAR CLAVE PRIMARIA: Comprobar si ya existe en la base de datos
+        if (validarPKCrear(numPrest) == false) {
+            return; // Si ya existe, se muestra el aviso y se corta la ejecución aquí mismo
+        }
+
         double impPrest = Double.parseDouble(impPrestTexto);
         double impReci = Double.parseDouble(impReciTexto);
         
@@ -312,24 +317,21 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
         // Obtener la forma de pago seleccionada en el ComboBox
         String codFPago = jComboBoxFormasPago.getSelectedItem().toString();
 
-        // 4. Crear el objeto Prestamos con la estructura de tu modelo
+        // 5. Crear el objeto Prestamos con la estructura de tu modelo
         Prestamos nuevoPrestamo = new Prestamos(numPrest, fecha, impPrest, impReci, codFPago);
 
-        // 5. Llamar al controlador y guardar el número de filas afectadas
+        // 6. Llamar al controlador y guardar el número de filas afectadas
         int filasAfectadas = PScontrolador.create(nuevoPrestamo); 
 
-        // 6. Comprobar si se insertó correctamente (mayor que 0)
+        // 7. Comprobar si se insertó correctamente (mayor que 0)
         if (filasAfectadas > 0) {
             JOptionPane.showMessageDialog(this, "¡Préstamo creado correctamente!");
             
             // Actualizar la tabla principal para que refleje el nuevo préstamo
             cargarTablaPrestamos(PScontrolador.readAll());
             
-            // Limpiar los campos del formulario
-            jTextFieldNumero.setText("");
-            jTextFieldFecha.setText("");
-            jTextFieldImporte.setText("");
-            jTextFieldImporteRecibo.setText("");
+            // Limpiar los campos del formulario (y reactivar el número por si acaso)
+            limpiarCampos();
         } else {
             JOptionPane.showMessageDialog(this, "No se pudo crear el préstamo en la base de datos.", "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -339,6 +341,7 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
     } catch (Exception e) {
         JOptionPane.showMessageDialog(this, "Ocurrió un error inesperado: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
     }
+
 
         
     }//GEN-LAST:event_jButtonCreateActionPerformed
@@ -440,6 +443,54 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
         
         
     }//GEN-LAST:event_jButtonDeleteActionPerformed
+
+    private void jButtonUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonUpdateActionPerformed
+if (validarBusquedaId() == false) { 
+        return;
+    }
+    
+    // 2. Segundo validamos que no haya intentado cambiar la PK (usando la versión boolean que devuelve false si falla)
+    if (validarPKModificar() == false) {
+        return;
+    }
+    
+    // 3. Y por último, SI TODO LO ANTERIOR ES CORRECTO, le preguntamos si está seguro
+    if (ActualizarSIoNo() == false) { 
+        return;
+    }
+    
+    try {
+        // 4. Capturar los valores y realizar la actualización en la BD
+        int numPrest = Integer.parseInt(jTextFieldNumero.getText().trim());
+        String fechaTexto = jTextFieldFecha.getText().trim();
+        double impPrest = Double.parseDouble(jTextFieldImporte.getText().trim());
+        double impReci = Double.parseDouble(jTextFieldImporteRecibo.getText().trim());
+        
+        java.time.LocalDate fecha = fechaTexto.isEmpty() ? java.time.LocalDate.now() : java.time.LocalDate.parse(fechaTexto);
+        String codFPago = jComboBoxFormasPago.getSelectedItem().toString();
+
+        Prestamos prestamoModificado = new Prestamos(numPrest, fecha, impPrest, impReci, codFPago);
+        int filasAfectadas = PScontrolador.update(prestamoModificado);
+        
+        if (filasAfectadas > 0) {
+            JOptionPane.showMessageDialog(this, "¡Préstamo modificado correctamente!");
+        }
+        
+        // 5. Refrescar la tabla y limpiar campos
+        ArrayList<Prestamos> lista = PScontrolador.readAll();
+        if (lista.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "La lista está vacía");
+        }
+        cargarTablaPrestamos(lista);
+        limpiarCampos();
+
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "ERROR de formato numérico: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "ERROR: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
+    }//GEN-LAST:event_jButtonUpdateActionPerformed
     
     /**
      * @param args the command line arguments
@@ -703,6 +754,59 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
         jTablePrestamos.setDefaultEditor(Object.class, null);
         jTableRecibos.setDefaultEditor(Object.class, null);
     }
+    
+    public boolean ActualizarSIoNo()
+    {
+        int respuesta = JOptionPane.showConfirmDialog(this, "¿Estas seguro de modificar la forma de pago?",
+                                                            "confirmar",
+                                                            JOptionPane.YES_NO_OPTION);
+        
+        if (respuesta == JOptionPane.YES_OPTION) 
+        {
+            return true;
+        }
+        return false;
+    }
+    
+ public boolean validarPKModificar() {
+    try {
+        int filaSeleccionada = jTablePrestamos.getSelectedRow();
+        if (filaSeleccionada != -1) {
+            String pkOriginal = jTablePrestamos.getValueAt(filaSeleccionada, 0).toString();
+            String pkActual = jTextFieldNumero.getText().trim();
+            
+            if (!pkOriginal.equals(pkActual)) {
+                throw new Exception("No se puede modificar el número de préstamo porque es la clave primaria (PK).");
+            }
+        }
+        return true;
+        
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "ERROR: " + e.getMessage(), "Error de validación", JOptionPane.ERROR_MESSAGE);
+        return false; 
+    }
+}
+    
+ public boolean validarPKCrear(int nuevoNumPrestamo) {
+    try {
+        Prestamos prestamoExistente = PScontrolador.readById(nuevoNumPrestamo);
+        
+        if (prestamoExistente != null) {
+            JOptionPane.showMessageDialog(this, "Ya existe un préstamo con el número " + nuevoNumPrestamo);
+            return false; // Ya existe, devolvemos false para detener el proceso
+        }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "ERROR: " + e.getMessage());
+        return false;
+    }
+    return true; 
+
+}
+    // coger el campo del tabla que es el pk y el texfield comparalos si no son iguales salta exception en modificar
+    // y en crear si son iguales 
+    
+    
+    
 }
 
 
