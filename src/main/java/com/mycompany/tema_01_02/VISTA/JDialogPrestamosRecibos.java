@@ -8,6 +8,7 @@ import com.mycompany.tema_01_02.MODELO.Prestamos;
 import com.mycompany.tema_01_02.MODELO.Recibos;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -287,8 +288,58 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
     private void jButtonCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCreateActionPerformed
         // TODO add your handling code here:
         
+        try {
+        // 1. Capturar los valores de las cajas de texto
+        String numTexto = jTextFieldNumero.getText().trim();
+        String fechaTexto = jTextFieldFecha.getText().trim();
+        String impPrestTexto = jTextFieldImporte.getText().trim();
+        String impReciTexto = jTextFieldImporteRecibo.getText().trim();
         
+        // 2. Validar que los campos obligatorios no estén vacíos
+        if (numTexto.isEmpty() || impPrestTexto.isEmpty() || impReciTexto.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Por favor, rellena los campos obligatorios (Número e Importes).", "Campos vacíos", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // 3. Convertir los tipos de datos necesarios
+        int numPrest = Integer.parseInt(numTexto);
+        double impPrest = Double.parseDouble(impPrestTexto);
+        double impReci = Double.parseDouble(impReciTexto);
         
+        // Si la fecha está vacía, usamos la fecha actual; si el usuario escribió una, la parseamos
+        LocalDate fecha = fechaTexto.isEmpty() ? LocalDate.now() : LocalDate.parse(fechaTexto);
+        
+        // Obtener la forma de pago seleccionada en el ComboBox
+        String codFPago = jComboBoxFormasPago.getSelectedItem().toString();
+
+        // 4. Crear el objeto Prestamos con la estructura de tu modelo
+        Prestamos nuevoPrestamo = new Prestamos(numPrest, fecha, impPrest, impReci, codFPago);
+
+        // 5. Llamar al controlador y guardar el número de filas afectadas
+        int filasAfectadas = PScontrolador.create(nuevoPrestamo); 
+
+        // 6. Comprobar si se insertó correctamente (mayor que 0)
+        if (filasAfectadas > 0) {
+            JOptionPane.showMessageDialog(this, "¡Préstamo creado correctamente!");
+            
+            // Actualizar la tabla principal para que refleje el nuevo préstamo
+            cargarTablaPrestamos(PScontrolador.readAll());
+            
+            // Limpiar los campos del formulario
+            jTextFieldNumero.setText("");
+            jTextFieldFecha.setText("");
+            jTextFieldImporte.setText("");
+            jTextFieldImporteRecibo.setText("");
+        } else {
+            JOptionPane.showMessageDialog(this, "No se pudo crear el préstamo en la base de datos.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "Error de formato: El número de préstamo y los importes deben ser valores numéricos.", "Error de formato", JOptionPane.ERROR_MESSAGE);
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Ocurrió un error inesperado: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
         
     }//GEN-LAST:event_jButtonCreateActionPerformed
 
