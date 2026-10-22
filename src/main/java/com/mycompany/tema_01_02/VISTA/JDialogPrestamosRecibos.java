@@ -412,11 +412,31 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
         }
         //se debe añadir la validacion de recibos
         
+        
         int id = Integer.parseInt(jTextFieldNumero.getText().trim());
-        JOptionPane.showMessageDialog(this, "ELIMINADO CORRECTAMENTE");
-        limpiarCampos();
-        //se debe cargar la tabla para actualizar la nueva lista
-        //int filasAfectadas = PScontrolador.deleteById(id);
+        
+        if (RScontrolador.tieneRecibosPagados(id)) {
+            JOptionPane.showMessageDialog(this,"No se puede eliminar el prestamo porque tiene al menos un recibo pagado. ");
+            return;
+        }
+        
+        
+        RScontrolador.deleteByPrestamoId(id);
+        
+        int filasAfectadas = PScontrolador.deleteById(id);
+        
+        if (filasAfectadas > 0) {
+            JOptionPane.showMessageDialog(this, "ELIMINADO CORRECTAMENTE");
+            limpiarCampos();
+            
+            ArrayList<Prestamos> lista = PScontrolador.readAll();
+            cargarTablaPrestamos(lista);
+            
+            cargarTablaRecibos(new ArrayList<>());
+        } else {
+            JOptionPane.showMessageDialog(this, "Error al eliminar el prestamo en la base de datos.");
+        }
+        
         
     }//GEN-LAST:event_jButtonDeleteActionPerformed
     
