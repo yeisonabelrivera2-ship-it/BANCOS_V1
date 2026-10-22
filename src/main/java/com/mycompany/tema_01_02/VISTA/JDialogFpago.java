@@ -100,8 +100,6 @@ public class JDialogFpago extends javax.swing.JDialog {
         JButtonReadByID.addActionListener(this::JButtonReadByIDActionPerformed);
         jToolBar1.add(JButtonReadByID);
 
-        jScrollPane1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-
         JTableTabla.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -135,12 +133,6 @@ public class JDialogFpago extends javax.swing.JDialog {
 
         TITULO4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         TITULO4.setText("Descripcion");
-
-        JTextFieldCodigo.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-
-        JTextFieldRecibos.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-
-        JTextFieldDescripcion.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -182,7 +174,6 @@ public class JDialogFpago extends javax.swing.JDialog {
                 .addContainerGap(56, Short.MAX_VALUE))
         );
 
-        JTextFieldReadID.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         JTextFieldReadID.addActionListener(this::JTextFieldReadIDActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
