@@ -421,6 +421,7 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
         }
         
         
+        
         RScontrolador.deleteByPrestamoId(id);
         
         int filasAfectadas = PScontrolador.deleteById(id);
