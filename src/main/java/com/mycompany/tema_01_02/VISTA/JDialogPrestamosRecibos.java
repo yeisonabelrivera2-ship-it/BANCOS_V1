@@ -2,8 +2,10 @@ package com.mycompany.tema_01_02.VISTA;
 
 import com.mycompany.tema_01_02.CONTROLADOR.FpagoController;
 import com.mycompany.tema_01_02.CONTROLADOR.PrestamosController;
+import com.mycompany.tema_01_02.CONTROLADOR.RecibosController;
 import com.mycompany.tema_01_02.MODELO.Fpago;
 import com.mycompany.tema_01_02.MODELO.Prestamos;
+import com.mycompany.tema_01_02.MODELO.Recibos;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -14,19 +16,22 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(JDialogPrestamosRecibos.class.getName());
 
-    private PrestamosController controlador;
+    private PrestamosController PScontrolador;
     private FpagoController FPcontrolador;
+    private RecibosController RScontrolador;
     
     public JDialogPrestamosRecibos(java.awt.Frame parent, boolean modal, Connection con) {
         super(parent, modal);
         initComponents();
-        controlador = new PrestamosController(con);
+        PScontrolador = new PrestamosController(con);
         FPcontrolador = new FpagoController(con);
+        RScontrolador = new RecibosController(con);
         
-       
-        ArrayList<Prestamos> lista = controlador.readAll();
-        cargarTabla(lista);
+       //CARGAR TABLA PRESTAMOS
+        ArrayList<Prestamos> lista = PScontrolador.readAll();
+        cargarTablaPrestamos(lista);
         
+        //cargar formas de apgo
         try 
         {
             ArrayList<Fpago> listaFpago = FPcontrolador.readAll();
@@ -40,6 +45,7 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
         {
             JOptionPane.showMessageDialog(this, "ERROR: " + e.getMessage());
         }
+        
         
         
     }
@@ -289,7 +295,7 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
         try 
         {
             int numero = Integer.parseInt(jTextFieldNumero.getText().trim().toUpperCase());
-            Prestamos prBuscado = controlador.readById(numero);
+            Prestamos prBuscado = PScontrolador.readById(numero);
             
             if (prBuscado == null) 
             {
@@ -298,7 +304,11 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
             }
             
             cargarTablaBuscado(prBuscado);
-            cargarCampos();
+            cargarCamposBuscado(prBuscado);
+            
+            String id = jTextFieldNumero.getText().trim();
+            ArrayList<Recibos> lista = RScontrolador.findById(id);
+            cargarTablaRecibos(lista);
             
         } 
         catch (NumberFormatException e) 
@@ -309,15 +319,20 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
 
     private void jTablePrestamosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTablePrestamosMouseClicked
         // TODO add your handling code here:
-        cargarCampos();
+        cargarCamposTabla();
         
+        
+        String id = jTextFieldNumero.getText().trim();
+        
+        ArrayList<Recibos> lista = RScontrolador.findById(id);
+        cargarTablaRecibos(lista);
     }//GEN-LAST:event_jTablePrestamosMouseClicked
 
     private void jButtonReadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonReadActionPerformed
         // TODO add your handling code here:
         
-        ArrayList<Prestamos> lista = controlador.readAll();
-        cargarTabla(lista);
+        ArrayList<Prestamos> lista = PScontrolador.readAll();
+        cargarTablaPrestamos(lista);
         
     }//GEN-LAST:event_jButtonReadActionPerformed
     
@@ -387,7 +402,7 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
 
     
-    public void cargarTabla(ArrayList<Prestamos> lista)
+    public void cargarTablaPrestamos(ArrayList<Prestamos> lista)
     {
         DefaultTableModel modelo = new DefaultTableModel();
             
@@ -431,6 +446,30 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
             
         jTablePrestamos.setModel(modelo);
     }
+    
+    
+    public void cargarTablaRecibos(ArrayList<Recibos> lista)
+    {
+        DefaultTableModel modelo = new DefaultTableModel();
+            
+            modelo.addColumn("Numero prestamo");
+            modelo.addColumn("Numero recibo");
+            modelo.addColumn("Fecha recibo");
+            modelo.addColumn("Importe recibo");
+            modelo.addColumn("fecha pago");
+            
+            for (Recibos rs : lista) 
+            {
+                Object[] fila = new Object[5];
+                        fila[0] = rs.getNNUMPREST();
+                        fila[1] = rs.getNNUMRECIB();
+                        fila[2] = rs.getDFECREC();
+                        fila[3] = rs.getNIMPREC();
+                        fila[4] = rs.getDFECPAGO();
+                modelo.addRow(fila);
+            }
+        jTableRecibos.setModel(modelo);
+    }
 
     
     public boolean validarBusquedaId()
@@ -444,7 +483,7 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
         }
         if (numeroTexto.length() > 10) 
         {
-            JOptionPane.showMessageDialog(this, "El campo esta vacio");
+            JOptionPane.showMessageDialog(this, "El numero no debe superar los 10 digitos");
             return false;
         }
         
@@ -472,7 +511,7 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
     }
     
     
-    public void cargarCampos()
+    public void cargarCamposTabla()
     {
         int seleccionado = jTablePrestamos.getSelectedRow();
         
@@ -487,25 +526,7 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
         jTextFieldImporte.setText(jTablePrestamos.getValueAt(seleccionado, 2).toString());
         jTextFieldImporteRecibo.setText(jTablePrestamos.getValueAt(seleccionado, 3).toString());
         String codigo = jTablePrestamos.getValueAt(seleccionado, 4).toString();
-
-        try 
-        {
-            ArrayList<Fpago> lista = FPcontrolador.readAll();
-
-            for (Fpago fp : lista) 
-            {
-                if (fp.getCCODFPAGO().equalsIgnoreCase(codigo)) 
-                {
-                    jComboBoxFormasPago.setSelectedItem(fp.toString());
-                    break;
-                }
-            }
-        }   
-        catch (SQLException e) 
-        {
-            JOptionPane.showMessageDialog(this, e.getMessage());
-        }
-
+        jComboBoxFormasPago.setSelectedItem(codigo);
     }
     
     
@@ -531,7 +552,18 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
     
     public void cargarCamposBuscado(Prestamos ps)
     {
+        if (ps == null) 
+        {
+            JOptionPane.showMessageDialog(this, "No existe el prestamo");
+            return;
+        }
         
+        jTextFieldNumero.setText(String.valueOf(ps.getNumPrest()).toString());
+        jTextFieldFecha.setText(String.valueOf(ps.getFecPrest()));
+        jTextFieldImporte.setText(String.valueOf(ps.getImpPrest()));
+        jTextFieldImporteRecibo.setText(String.valueOf(ps.getImpReci()));
+        String codigo = ps.getCodFPago();
+        jComboBoxFormasPago.setSelectedItem(codigo);
     }
     
 }

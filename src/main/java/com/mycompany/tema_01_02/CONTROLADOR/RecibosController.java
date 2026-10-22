@@ -29,17 +29,22 @@ public class RecibosController {
                 while(rs.next())
                 {
                     
-                    Recibos rb = new Recibos(rs.getInt("NNUMPREST"), 
-                    rs.getInt("NNUMRECIB"), 
-                    rs.getDate("DFECREC").toLocalDate(), 
-                    rs.getInt("NIMPREC"), 
-                    rs.getDate("DFECPAGO").toLocalDate());
-                    
-                    listaRecibos.add(rb);
+                    java.sql.Date fechaPago = rs.getDate("DFECPAGO");
+
+                    Recibos rb = new Recibos(rs.getInt("NNUMPREST"),
+                                             rs.getInt("NNUMRECIB"),
+                                             rs.getDate("DFECREC").toLocalDate(),
+                                             rs.getInt("NIMPREC"),
+                    fechaPago == null ? null : fechaPago.toLocalDate()
+                );
+
+                listaRecibos.add(rb);
                 }
             }
-        } catch (SQLException ex) { 
-            System.out.println("Error al buscar los recibos");;
+        } 
+        catch (SQLException ex) 
+        { 
+            ex.printStackTrace();
         }
         return listaRecibos;
     }
