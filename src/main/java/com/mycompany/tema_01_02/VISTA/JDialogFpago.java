@@ -76,6 +76,7 @@ public class JDialogFpago extends javax.swing.JDialog {
         JButtonUpdate.setFocusable(false);
         JButtonUpdate.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         JButtonUpdate.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        JButtonUpdate.addActionListener(this::JButtonUpdateActionPerformed);
         jToolBar1.add(JButtonUpdate);
 
         JButtonDelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/eliminar.png"))); // NOI18N
@@ -321,7 +322,7 @@ public class JDialogFpago extends javax.swing.JDialog {
         // TODO add your handling code here:
         
         
-        if (seleccionarTablaBorrar()== false) 
+        if (seleccionarTablaBorrarModificar()== false) 
         {
             return;
         }
@@ -367,6 +368,42 @@ public class JDialogFpago extends javax.swing.JDialog {
         
         seleccionarTabla();
     }//GEN-LAST:event_JTableTablaMouseClicked
+
+    private void JButtonUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonUpdateActionPerformed
+        // TODO add your handling code here:
+
+        if (validarModificarFpago()== false) 
+        {
+            return;
+        }
+        if (ActualizarSIoNo()== false) 
+        {
+            return;
+        }
+        
+        String codigo = JTextFieldCodigo.getText().trim().toUpperCase();
+        String descripcion = JTextFieldDescripcion.getText().trim().toUpperCase();
+        long recibos = Long.parseLong(JTextFieldRecibos.getText().trim());
+        
+        Fpago fp = new Fpago(codigo, descripcion, recibos);
+        int filasAfectadas = FPcontrolador.update(fp);
+        
+        try 
+        {
+            ArrayList<Fpago> lista = FPcontrolador.readAll();
+            
+            if (lista.isEmpty()) 
+            {
+                JOptionPane.showMessageDialog(this, "La lista esta vacia");
+            }
+            
+            CargarTabla(lista);
+        } 
+        catch (SQLException e) 
+        {
+            JOptionPane.showMessageDialog(this, "ERROR: " + e.getMessage());
+        }
+    }//GEN-LAST:event_JButtonUpdateActionPerformed
 
     /**
      * @param args the command line arguments
@@ -540,6 +577,52 @@ public class JDialogFpago extends javax.swing.JDialog {
     }
     
     
+    public boolean validarModificarFpago()
+    {
+        String codigo = JTextFieldCodigo.getText().trim().toUpperCase();
+        String descripcion = JTextFieldDescripcion.getText().trim();
+        String recibos = JTextFieldRecibos.getText().trim();
+        
+        if (codigo.isEmpty() || descripcion.isEmpty() || recibos.isEmpty()) 
+        {
+            JOptionPane.showMessageDialog(this, "No puede haber campos vacios");
+            return false;
+        }
+        if (codigo.length() > 2) 
+        {
+            JOptionPane.showMessageDialog(this, "El codido solo puede contener un maximo de 2 caracteres o numeros");
+            return false;
+        }
+        if (descripcion.length() > 100) 
+        {
+            JOptionPane.showMessageDialog(this, "La descripcion tiene un maximo de 100 caracteres");
+            return false;
+        }
+        
+        try 
+        {
+            Long nRecibos = Long.parseLong(JTextFieldRecibos.getText());
+            
+            if (nRecibos < 0) 
+            {
+                JOptionPane.showMessageDialog(this, "El numero de recibos no puede ser negativo");
+                return false;
+            }
+            if (nRecibos > 9999999999L) 
+            {
+               JOptionPane.showMessageDialog(this, "El numero de recibos no puede superar los 10 digitos");
+               return false; 
+            }
+        } 
+        catch (NumberFormatException e) 
+        {
+            JOptionPane.showMessageDialog(this, "ERROR: " + e.getMessage());
+            return false;
+        }
+        return true;
+    }
+    
+    
     public void seleccionarTabla()
     {
         int filaSeleccionada = JTableTabla.getSelectedRow();
@@ -556,7 +639,7 @@ public class JDialogFpago extends javax.swing.JDialog {
     }
     
     
-    public boolean seleccionarTablaBorrar()
+    public boolean seleccionarTablaBorrarModificar()
     {
         int filaSeleccionada = JTableTabla.getSelectedRow();
         
@@ -590,7 +673,7 @@ public class JDialogFpago extends javax.swing.JDialog {
     public boolean EliminarSIoNo()
     {
         int respuesta = JOptionPane.showConfirmDialog(this, "¿Estas seguro de eliminar la forma de pago?",
-                                                            "",
+                                                            "eliminar",
                                                             JOptionPane.YES_NO_OPTION);
         
         if (respuesta == JOptionPane.YES_OPTION) 
@@ -603,7 +686,7 @@ public class JDialogFpago extends javax.swing.JDialog {
     public boolean ActualizarSIoNo()
     {
         int respuesta = JOptionPane.showConfirmDialog(this, "¿Estas seguro de modificar la forma de pago?",
-                                                            "",
+                                                            "confirmar",
                                                             JOptionPane.YES_NO_OPTION);
         
         if (respuesta == JOptionPane.YES_OPTION) 
@@ -615,8 +698,8 @@ public class JDialogFpago extends javax.swing.JDialog {
     
     public boolean crearSIoNo()
     {
-        int respuesta = JOptionPane.showConfirmDialog(this, "¿Estas seguro de modificar la forma de pago?",
-                                                            "",
+        int respuesta = JOptionPane.showConfirmDialog(this, "¿Estas seguro de que quieres crear la forma de pago?",
+                                                            "confirmar",
                                                             JOptionPane.YES_NO_OPTION);
         
         if (respuesta == JOptionPane.YES_OPTION) 
@@ -625,6 +708,8 @@ public class JDialogFpago extends javax.swing.JDialog {
         }
         return false;
     }
+    
+    
     
     public void limpiarCampos()
     {
