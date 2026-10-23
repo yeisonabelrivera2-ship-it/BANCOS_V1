@@ -115,6 +115,25 @@ public class RecibosController {
             return false;
         }
     
+    public boolean estaPagado(int numPrest, int numRecib) {
+        String sql = "SELECT DFECPAGO FROM RECIBOS WHERE NNUMPREST = ? AND NNUMRECIB = ?";
+
+        try (PreparedStatement st = con.prepareStatement(sql)) {
+            st.setInt(1, numPrest);
+            st.setInt(2, numRecib);
+
+            try (ResultSet rs = st.executeQuery()) {
+                if (rs.next()) {
+                    java.sql.Date fechaPago = rs.getDate("DFECPAGO");
+                    return fechaPago != null;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
     
     public int generarRecibos(String id){
         
