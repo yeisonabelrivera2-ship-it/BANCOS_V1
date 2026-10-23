@@ -24,6 +24,12 @@
             <artifactId>flatlaf</artifactId>
             <version>3.7</version>
         </dependency>
+        
+        <dependency>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>pdfbox</artifactId>
+            <version>3.0.5</version>
+        </dependency>
     </dependencies>
     <name>tema_02_02</name>
 </project>
