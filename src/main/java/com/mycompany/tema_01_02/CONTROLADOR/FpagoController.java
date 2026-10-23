@@ -106,11 +106,7 @@ public class FpagoController {
                     
             filasAfectadas = st.executeUpdate();
         } 
-        catch (SQLException e) 
-        {
-            e.printStackTrace();
-        }
-        
+   
         return filasAfectadas;
     }
     

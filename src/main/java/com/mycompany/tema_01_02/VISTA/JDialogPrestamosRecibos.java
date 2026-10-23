@@ -357,7 +357,7 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
 
             cargarTablaPrestamos(PScontrolador.readAll());
 
-            int recibosGenerados = RScontrolador.generarRecibos(numTexto);
+            int prestamosGenerados = RScontrolador.generarRecibos2(numPrest, impReci);
            
             limpiarCampos();
         } else {

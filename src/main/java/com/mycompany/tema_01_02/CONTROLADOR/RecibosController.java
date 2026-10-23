@@ -174,4 +174,27 @@ public class RecibosController {
         return filasAfectadas;
     }
     
+    public int generarRecibos2(int numPrestamo, double importeRecibo) {
+
+        int resultado = -1;
+        String sql = "{CALL sp_GENERARRECIBOS2(?, ?, ?)}";
+
+
+        try (CallableStatement cs = con.prepareCall(sql)) {
+
+            cs.setInt(1, numPrestamo);
+            cs.setBigDecimal(2, java.math.BigDecimal.valueOf(importeRecibo));
+            cs.registerOutParameter(3, INTEGER);
+
+            cs.execute();
+
+
+        } catch (SQLException ex) {
+            System.out.println("Error al generar los recibos");
+        
+        }
+
+        return resultado;
+    }
+    
 }
