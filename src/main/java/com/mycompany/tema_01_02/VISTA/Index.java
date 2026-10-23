@@ -200,7 +200,8 @@ public class Index extends javax.swing.JFrame {
     javax.swing.UIManager.put("ScrollBar.thumbInsets", new java.awt.Insets(2, 2, 2, 2));
     javax.swing.UIManager.put("ScrollBar.width", 12);
     ///NO BORRAR LO DE ARRIBA
-        java.awt.EventQueue.invokeLater(() -> new Index().setVisible(true));
+        Index ventana = new Index();    
+        ventana.setVisible(true);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
