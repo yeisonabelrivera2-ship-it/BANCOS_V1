@@ -565,8 +565,6 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "ERROR: " + e.getMessage());
         }
-
-
     }//GEN-LAST:event_jButtonCrearReciboActionPerformed
 
     private void jTableRecibosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableRecibosMouseClicked
