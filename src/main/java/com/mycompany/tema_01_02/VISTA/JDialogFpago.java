@@ -145,6 +145,8 @@ public class JDialogFpago extends javax.swing.JDialog {
         TITULO4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         TITULO4.setText("Descripcion");
 
+        JTextFieldRecibos.setEditable(false);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -280,7 +282,7 @@ public class JDialogFpago extends javax.swing.JDialog {
     }//GEN-LAST:event_JTextFieldReadIDActionPerformed
 
     private void JButtonCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonCreateActionPerformed
-        
+        JTextFieldRecibos.setText("0");
         if (validarAñadirFpago() == false) {
         return;
         }
@@ -541,7 +543,7 @@ public class JDialogFpago extends javax.swing.JDialog {
         String descripcion = JTextFieldDescripcion.getText().trim();
         String recibos = JTextFieldRecibos.getText().trim();
         
-        if (codigo.isEmpty() || descripcion.isEmpty() || recibos.isEmpty()) 
+        if (codigo.isEmpty() || descripcion.isEmpty() /*|| recibos.isEmpty()*/) 
         {
             JOptionPane.showMessageDialog(this, "No puede haber campos vacios");
             return false;
