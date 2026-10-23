@@ -140,7 +140,7 @@ public class Index extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-      // 1. Solo el azul de acento (aros de foco y selecciones)
+    
     java.util.Map<String, String> colores = new java.util.HashMap<>();
     colores.put("@accentColor", "#007AFF");
     com.formdev.flatlaf.FlatLaf.setGlobalExtraDefaults(colores);

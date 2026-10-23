@@ -114,6 +114,26 @@ public class PrestamosController {
         }
         return filasAfectadas;
     }
+    
+    
+    public double calcularDeudaPrestamo(int numPrestamo) {
+        double deudaTotal = 0.0;
+        String sql = "SELECT fn_calcular_deuda_prestamo(?)";
+
+        try (PreparedStatement st = con.prepareStatement(sql)) {
+            st.setInt(1, numPrestamo);
+
+            try (ResultSet rs = st.executeQuery()) {
+                if (rs.next()) {
+                    deudaTotal = rs.getDouble(1);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al calcular la deuda: " + e.getMessage());
+        }
+
+        return deudaTotal;
+    }
 }
     
 
