@@ -4,6 +4,7 @@ package com.mycompany.tema_01_02.CONTROLADOR;
 import com.mycompany.tema_01_02.MODELO.Recibos;
 import java.sql.*;
 import static java.sql.JDBCType.INTEGER;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 
@@ -136,4 +137,22 @@ public class RecibosController {
         
         return resultado;
     }
+    
+    public int pagarRecibo(int numPrest, int numRecib, LocalDate fechaPago) {
+        int filasAfectadas = 0;
+        String sql = "UPDATE RECIBOS SET DFECPAGO = ? WHERE NNUMPREST = ? AND NNUMRECIB = ?";
+
+        try (PreparedStatement st = con.prepareStatement(sql)) {
+            st.setDate(1, Date.valueOf(fechaPago));
+            st.setInt(2, numPrest);
+            st.setInt(3, numRecib);
+
+            filasAfectadas = st.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println("Error al pagar el recibo");
+            ex.printStackTrace();
+        }
+        return filasAfectadas;
+    }
+    
 }
