@@ -49,7 +49,7 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(this, "ERROR: " + e.getMessage());
         }
         
-        
+        cargarTablaRecibosVacio();
         
     }
 
@@ -223,7 +223,7 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jTextFieldImporteRecibo, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jComboBoxFormasPago, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -277,7 +277,7 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 518, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -412,6 +412,7 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(this,"No se puede eliminar el prestamo porque tiene al menos un recibo pagado. ");
             return;
         }
+        
         
         
         RScontrolador.deleteByPrestamoId(id);
@@ -567,6 +568,20 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
             }
         jTableRecibos.setModel(modelo);
     }
+    
+    public void cargarTablaRecibosVacio()
+    {
+        DefaultTableModel modelo = new DefaultTableModel();
+            
+            modelo.addColumn("Numero prestamo");
+            modelo.addColumn("Numero recibo");
+            modelo.addColumn("Fecha recibo");
+            modelo.addColumn("Importe recibo");
+            modelo.addColumn("fecha pago");
+            
+            
+        jTableRecibos.setModel(modelo);
+    }
 
     
     public boolean validarBusquedaId()
@@ -672,6 +687,16 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
         
         if (respuesta == JOptionPane.YES_OPTION) 
         {
+            return true;
+        }
+        return false;
+    }
+    
+    public boolean crearSIoNo() 
+    {
+        int respuesta = JOptionPane.showConfirmDialog(this, "¿Estas seguro de que quieres crear el prestamo","Confirmacion",JOptionPane.YES_NO_OPTION);
+
+        if (respuesta == JOptionPane.YES_OPTION) {
             return true;
         }
         return false;
