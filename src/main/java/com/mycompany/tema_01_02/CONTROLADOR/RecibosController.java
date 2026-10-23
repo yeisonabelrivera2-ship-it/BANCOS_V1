@@ -3,6 +3,7 @@ package com.mycompany.tema_01_02.CONTROLADOR;
 
 import com.mycompany.tema_01_02.MODELO.Recibos;
 import java.sql.*;
+import static java.sql.JDBCType.INTEGER;
 import java.util.ArrayList;
 
 
@@ -112,4 +113,27 @@ public class RecibosController {
             
             return false;
         }
+    
+    
+    public int generarRecibos(String id){
+        
+        int resultado = 0;
+        
+        String sql = "{CALL sp_GENERARRECIBOS(?, ?)}";
+        
+        try (CallableStatement cs = con.prepareCall(sql)){
+
+            cs.setString(1, id);
+            cs.registerOutParameter(2, INTEGER);
+            
+            cs.execute();
+
+            resultado = cs.getInt(2);
+            
+        } catch (SQLException ex) {
+            System.out.println("Error al general el recibo");
+        }
+        
+        return resultado;
+    }
 }
