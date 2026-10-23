@@ -398,9 +398,7 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
         if (EliminarSioNo() == false) 
         {
             return;
-        }
-        //se debe añadir la validacion de recibos
-        
+        }        
         
         int id = Integer.parseInt(jTextFieldNumero.getText().trim());
         
