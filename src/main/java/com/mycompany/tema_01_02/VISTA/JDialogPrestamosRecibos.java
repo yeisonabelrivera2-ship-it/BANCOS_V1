@@ -525,65 +525,67 @@ try {
     }//GEN-LAST:event_jButtonUpdateActionPerformed
 
     private void jTableRecibosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableRecibosMouseClicked
-        int seleccionado = jTableRecibos.getSelectedRow();
 
-        if (seleccionado != -1) {
-            Object numRecibo = jTableRecibos.getValueAt(seleccionado, 1);
-
-            if (numRecibo != null) {
-                jTextFieldNumeroReciboAPagar.setText(numRecibo.toString());
-            }
-        }
     }//GEN-LAST:event_jTableRecibosMouseClicked
 
     private void jButtonPagarRereciboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPagarRereciboActionPerformed
-        if (!validarBusquedaId()) {
+if (!validarBusquedaId()) {
+        return;
+    }
+
+    String numPrestTexto = jTextFieldNumero.getText().trim();
+
+    int filaSeleccionada = jTableRecibos.getSelectedRow();
+    
+    if (filaSeleccionada == -1) {
+        JOptionPane.showMessageDialog(this, "Por favor, selecciona un recibo de la tabla para pagar.", "Recibo no seleccionado", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    Object valorRecibo = jTableRecibos.getValueAt(filaSeleccionada, 1);
+    String numRecibTexto = valorRecibo != null ? valorRecibo.toString().trim() : "";
+
+    if (numRecibTexto.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Por favor, selecciona un número de recibo válido de la tabla.");
+        return;
+    }
+
+    try {
+        int numPrest = Integer.parseInt(numPrestTexto);
+        int numRecib = Integer.parseInt(numRecibTexto);
+
+        if (RScontrolador.estaPagado(numPrest, numRecib)) {
+            JOptionPane.showMessageDialog(this, "Este recibo ya se encuentra pagado.");
             return;
         }
 
-        String numPrestTexto = jTextFieldNumero.getText().trim();
-        String numRecibTexto = jTextFieldNumeroReciboAPagar.getText().trim();
+        LocalDate fechaActual = LocalDate.now();
 
-        if(numRecibTexto.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Por favor, introduce el numero de recibo que deseas pagar. ");
+        int respuesta = JOptionPane.showConfirmDialog(this, "¿Deseas registrar el pago del recibo " + numRecib + " con fecha de hoy (" + fechaActual + ")?", "Confirmacion de Pago", JOptionPane.YES_NO_OPTION);
+
+        if (respuesta != JOptionPane.YES_OPTION) {
             return;
         }
 
-        try {
-            int numPrest = Integer.parseInt(numPrestTexto);
-            int numRecib = Integer.parseInt(numRecibTexto);
+        int filasAfectadas = RScontrolador.pagarRecibo(numPrest, numRecib, fechaActual);
 
-            if (RScontrolador.estaPagado(numPrest, numRecib)) {
-                JOptionPane.showMessageDialog(this, "Este recibo ya se encuentra pagado.");
-                return;
-            }
+        if (filasAfectadas > 0) {
+            JOptionPane.showMessageDialog(this, "¡Recibo pagado correctamente!");
 
-            LocalDate fechaActual = LocalDate.now();
+            ArrayList<Recibos> listaRecibos = RScontrolador.findById(numPrestTexto);
+            cargarTablaRecibos(listaRecibos);
 
-            int respuesta = JOptionPane.showConfirmDialog(this, "¿Deseas registrar el pago del recibo " + numRecib + " con fecha de hoy (" + fechaActual + ")?", "Confirmacion de Pago", JOptionPane.YES_NO_OPTION);
-
-            if (respuesta != JOptionPane.YES_OPTION) {
-                return;
-            }
-
-            int filasAfectadas = RScontrolador.pagarRecibo(numPrest, numRecib, fechaActual);
-
-            if (filasAfectadas > 0) {
-                JOptionPane.showMessageDialog(this, "¡Recibo pagado correctamente!");
-
-                ArrayList<Recibos> listaRecibos = RScontrolador.findById(numPrestTexto);
-                cargarTablaRecibos(listaRecibos);
-
-                jTextFieldNumeroReciboAPagar.setText("");
-            } else {
-                JOptionPane.showMessageDialog(this, "No se encontro el recibo.");
-            }
-
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "ERROR: El valor introducido es incorrecto");
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "ERROR: " + e.getMessage());
+            // Nota: Ya no limpiamos jTextFieldNumeroReciboAPagar aquí porque ese campo ahora muestra la deuda.
+        } else {
+            JOptionPane.showMessageDialog(this, "No se encontro el recibo.");
         }
+
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "ERROR: El valor introducido es incorrecto");
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "ERROR: " + e.getMessage());
+    }
+
     }//GEN-LAST:event_jButtonPagarRereciboActionPerformed
 
     private void jButtonImporteRestantePorPagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonImporteRestantePorPagarActionPerformed
