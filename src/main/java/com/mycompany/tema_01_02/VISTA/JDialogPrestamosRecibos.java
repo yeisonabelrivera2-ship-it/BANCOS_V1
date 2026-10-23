@@ -58,7 +58,6 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButtonCrearRecibo.addActionListener(this::jButtonCrearReciboActionPerformed);
         jToolBar1 = new javax.swing.JToolBar();
         jButtonCreate = new javax.swing.JButton();
         jButtonDelete = new javax.swing.JButton();
@@ -285,43 +284,6 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-        // BOTON DE TESTING: crea un recibo suelto para el prestamo cuyo numero esta en el campo "Numero"
-    private void jButtonCrearReciboActionPerformed(java.awt.event.ActionEvent evt) {
-        if (validarBusquedaId() == false) {
-            return;
-        }
-
-        try {
-            int numPrest = Integer.parseInt(jTextFieldNumero.getText().trim());
-
-            Prestamos prestamo = PScontrolador.readById(numPrest);
-            if (prestamo == null) {
-                JOptionPane.showMessageDialog(this, "No existe el prestamo " + numPrest);
-                return;
-            }
-
-            // Importe: el del campo "Importe Recibo"; si esta vacio, el del prestamo
-            String impTexto = jTextFieldImporteRecibo.getText().trim();
-            double importe = impTexto.isEmpty() ? prestamo.getImpReci() : Double.parseDouble(impTexto);
-
-            int numRecib = RScontrolador.siguienteNumRecibo(numPrest);
-
-            // Recibos.NIMPREC es int, por eso se redondea
-            Recibos nuevo = new Recibos(numPrest, numRecib, LocalDate.now(), (int) Math.round(importe), null);
-
-            int filas = RScontrolador.create(nuevo);
-
-            if (filas > 0) {
-                JOptionPane.showMessageDialog(this, "Recibo " + numRecib + " creado para el prestamo " + numPrest);
-                cargarTablaRecibos(RScontrolador.findById(String.valueOf(numPrest)));
-            } else {
-                JOptionPane.showMessageDialog(this, "No se pudo crear el recibo.", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "El importe del recibo debe ser numerico.", "Error de formato", JOptionPane.ERROR_MESSAGE);
-        }
-    }
 
     private void jButtonCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCreateActionPerformed
         // TODO add your handling code here:
