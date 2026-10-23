@@ -21,7 +21,7 @@ public class FpagoController {
         this.con = con;
     }
 
-    
+    // ReadAll V2: consulta en la base de datos el numero de recibos que se han pagado usando esa forma de pago
     public ArrayList<Fpago> readAll()throws SQLException
     {
         ArrayList<Fpago> lista = new ArrayList<>();
@@ -50,18 +50,17 @@ public class FpagoController {
         return lista;   
     }
     
-    
-    public Fpago readById(String id) throws SQLException
-    {
+    // ReadAByID V2: consulta en la base de datos el numero de recibos que se han pagado usando esa forma de pago
+    public Fpago readById(String id) throws SQLException {
         Fpago fp = null;
         String sql = "SELECT f.CCODFPAGO, f.CDESFPAGO, "
                 + "(SELECT COUNT(r.NNUMRECIB) FROM RECIBOS r "
                 + " JOIN PRESTAMOS p ON r.NNUMPREST = p.NNUMPREST "
                 + " WHERE p.CCODFPAGO = f.CCODFPAGO "
                 + "   AND r.DFECPAGO IS NOT NULL) NRECIBOS "
-                + "FROM FPAGO f WHERE f.CCODFPAGO = ?";        
-        try(PreparedStatement st = con.prepareStatement(sql)) 
-        {
+                + "FROM FPAGO f WHERE f.CCODFPAGO = ?";     
+        
+        try(PreparedStatement st = con.prepareStatement(sql)) {
             st.setString(1, id);
             
             try(ResultSet rs = st.executeQuery())
@@ -74,17 +73,15 @@ public class FpagoController {
                 }
             }
         } 
-        catch (SQLException e) 
-        {
+        catch (SQLException e){
             e.printStackTrace();
         }
         return fp;
     }
     
     
-    
-    public int create(Fpago fp) throws SQLException
-    {
+    // CreateV2: Crea una nueva forma de pago, el numero de de recibos empieza en cero siempre, y crece si se paga con ese forma de pago
+    public int create(Fpago fp) throws SQLException {
         int filasAfectadas = 0;
         String sql = "INSERT INTO FPAGO(CCODFPAGO, CDESFPAGO, NRECIBOS) VALUES(?, ?, ?)";
        
@@ -103,37 +100,31 @@ public class FpagoController {
         return filasAfectadas;
     }
     
-    
-    public int deleteById(String id)throws SQLException
-    {
+    // 
+    public int deleteById(String id)throws SQLException {
         int filasAfectadas = 0;
         String sql = "DELETE FROM FPAGO WHERE CCODFPAGO = ?";
         
-        try(PreparedStatement st = con.prepareStatement(sql)) 
-        {
+        try(PreparedStatement st = con.prepareStatement(sql)) {
             st.setString(1, id);
-                    
             filasAfectadas = st.executeUpdate();
         } 
    
         return filasAfectadas;
     }
     
-    public int update(Fpago fp)
-    {
+    public int update(Fpago fp) {
         int filasAfectadas = 0;
         String sql = "UPDATE FPAGO SET CDESFPAGO = ?, NRECIBOS = ? WHERE CCODFPAGO = ?";
         
-        try (PreparedStatement st = con.prepareStatement(sql))
-        {
+        try (PreparedStatement st = con.prepareStatement(sql)){
             st.setString(1, fp.getCDESFPAGO());
             st.setLong(2, fp.getNRECIBOS());
             st.setString(3, fp.getCCODFPAGO());
             
             filasAfectadas = st.executeUpdate();
         } 
-        catch (SQLException e) 
-        {
+        catch (SQLException e) {
             e.printStackTrace();
         }
         return filasAfectadas;
