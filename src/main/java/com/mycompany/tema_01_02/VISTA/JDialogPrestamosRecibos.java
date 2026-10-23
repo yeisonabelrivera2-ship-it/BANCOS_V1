@@ -279,6 +279,7 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
 
         jButtonImporteRestantePorPagar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/restanteDeuda.png"))); // NOI18N
         jButtonImporteRestantePorPagar.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButtonImporteRestantePorPagar.addActionListener(this::jButtonImporteRestantePorPagarActionPerformed);
         jToolBar2.add(jButtonImporteRestantePorPagar);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -587,6 +588,11 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(this, "ERROR: " + e.getMessage());
         }
     }//GEN-LAST:event_jButtonPagarRereciboActionPerformed
+
+    private void jButtonImporteRestantePorPagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonImporteRestantePorPagarActionPerformed
+        
+
+    }//GEN-LAST:event_jButtonImporteRestantePorPagarActionPerformed
     
     /**
      * @param args the command line arguments
