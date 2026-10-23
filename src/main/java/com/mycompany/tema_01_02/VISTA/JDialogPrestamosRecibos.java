@@ -6,6 +6,7 @@ import com.mycompany.tema_01_02.CONTROLADOR.RecibosController;
 import com.mycompany.tema_01_02.MODELO.Fpago;
 import com.mycompany.tema_01_02.MODELO.Prestamos;
 import com.mycompany.tema_01_02.MODELO.Recibos;
+import java.awt.event.MouseEvent;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
