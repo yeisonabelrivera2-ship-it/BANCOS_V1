@@ -80,10 +80,11 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
         jComboBoxFormasPago = new javax.swing.JComboBox<>();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTableRecibos = new javax.swing.JTable();
-        jButtonImporteRestantePorPagar = new javax.swing.JButton();
+        jTextFieldNumeroReciboAPagar = new javax.swing.JTextField();
+        jToolBar2 = new javax.swing.JToolBar();
         jButtonCrearRecibo = new javax.swing.JButton();
         jButtonPagarRerecibo = new javax.swing.JButton();
-        jTextFieldNumeroReciboAPagar = new javax.swing.JTextField();
+        jButtonImporteRestantePorPagar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -256,11 +257,22 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
         });
         jScrollPane2.setViewportView(jTableRecibos);
 
-        jButtonImporteRestantePorPagar.setText("Importe restante por pagar");
+        jTextFieldNumeroReciboAPagar.setEditable(false);
 
-        jButtonCrearRecibo.setText("Crear recibo");
+        jToolBar2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jToolBar2.setRollover(true);
 
-        jButtonPagarRerecibo.setText("Pagar recibo");
+        jButtonCrearRecibo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/crearRecibo.png"))); // NOI18N
+        jButtonCrearRecibo.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jToolBar2.add(jButtonCrearRecibo);
+
+        jButtonPagarRerecibo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pagarRecibo.png"))); // NOI18N
+        jButtonPagarRerecibo.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jToolBar2.add(jButtonPagarRerecibo);
+
+        jButtonImporteRestantePorPagar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/restanteDeuda.png"))); // NOI18N
+        jButtonImporteRestantePorPagar.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jToolBar2.add(jButtonImporteRestantePorPagar);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -274,16 +286,12 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 406, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 443, Short.MAX_VALUE)
                             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jButtonImporteRestantePorPagar, javax.swing.GroupLayout.DEFAULT_SIZE, 213, Short.MAX_VALUE)
-                                    .addComponent(jTextFieldNumeroReciboAPagar))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jButtonCrearRecibo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jButtonPagarRerecibo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jToolBar2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jTextFieldNumeroReciboAPagar)))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -295,15 +303,11 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButtonImporteRestantePorPagar, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButtonCrearRecibo, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jButtonPagarRerecibo, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
-                            .addComponent(jTextFieldNumeroReciboAPagar))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jToolBar2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextFieldNumeroReciboAPagar, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1))
                 .addContainerGap())
@@ -474,6 +478,11 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
     if (ActualizarSIoNo() == false) { 
         return;
     }
+        
+    if (validarNoTocarPrestamo() == false) 
+    {
+        return;
+    }
     
     try {
         int numPrest = Integer.parseInt(jTextFieldNumero.getText().trim());
@@ -573,6 +582,7 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
     private javax.swing.JTextField jTextFieldNumero;
     private javax.swing.JTextField jTextFieldNumeroReciboAPagar;
     private javax.swing.JToolBar jToolBar1;
+    private javax.swing.JToolBar jToolBar2;
     // End of variables declaration//GEN-END:variables
 
     
@@ -843,6 +853,29 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
         }
         return true; 
 
+    }
+    
+    public boolean validarNoTocarPrestamo()
+    {
+        int seleccion = jTablePrestamos.getSelectedRow();
+        
+        if (seleccion == -1) 
+        {
+            JOptionPane.showMessageDialog(this, "No hay ninguna fila seleccionada");
+            return false;
+        }
+        
+        String importePrestamoTabla = jTablePrestamos.getValueAt(seleccion, 2).toString().trim();
+        String importePrestamoCampo = jTextFieldImporte.getText().trim();
+        double importeTabla = Double.parseDouble(importePrestamoTabla);
+        double importeCampo = Double.parseDouble(importePrestamoCampo);
+        
+        if (Double.compare(importeTabla, importeCampo) != 0) 
+        {
+            JOptionPane.showMessageDialog(this, "No esta permitido modificar el importe del prestamo");
+            return false;
+        }     
+        return true;
     }
 }
 
