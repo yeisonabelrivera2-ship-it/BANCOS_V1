@@ -25,7 +25,12 @@ public class FpagoController {
     public ArrayList<Fpago> readAll()throws SQLException
     {
         ArrayList<Fpago> lista = new ArrayList<>();
-        String sql = "SELECT CCODFPAGO, CDESFPAGO, NRECIBOS FROM FPAGO";
+        String sql = "SELECT f.CCODFPAGO, f.CDESFPAGO, "
+                + "(SELECT COUNT(r.NNUMRECIB) FROM RECIBOS r "
+                + " JOIN PRESTAMOS p ON r.NNUMPREST = p.NNUMPREST "
+                + " WHERE p.CCODFPAGO = f.CCODFPAGO "
+                + "   AND r.DFECPAGO IS NOT NULL) NRECIBOS "
+                + "FROM FPAGO f";
         
         try (PreparedStatement st = con.prepareStatement(sql);
              ResultSet rs = st.executeQuery())
@@ -49,8 +54,12 @@ public class FpagoController {
     public Fpago readById(String id) throws SQLException
     {
         Fpago fp = null;
-        String sql = "SELECT CCODFPAGO, CDESFPAGO, NRECIBOS FROM FPAGO WHERE ccodfpago = ?";
-        
+        String sql = "SELECT f.CCODFPAGO, f.CDESFPAGO, "
+                + "(SELECT COUNT(r.NNUMRECIB) FROM RECIBOS r "
+                + " JOIN PRESTAMOS p ON r.NNUMPREST = p.NNUMPREST "
+                + " WHERE p.CCODFPAGO = f.CCODFPAGO "
+                + "   AND r.DFECPAGO IS NOT NULL) NRECIBOS "
+                + "FROM FPAGO f WHERE f.CCODFPAGO = ?";        
         try(PreparedStatement st = con.prepareStatement(sql)) 
         {
             st.setString(1, id);
