@@ -22,7 +22,7 @@ public class FpagoController {
     }
 
     
-    public ArrayList<Fpago> readAll() throws SQLException
+    public ArrayList<Fpago> readAll()throws SQLException
     {
         ArrayList<Fpago> lista = new ArrayList<>();
         String sql = "SELECT CCODFPAGO, CDESFPAGO, NRECIBOS FROM FPAGO";
@@ -37,7 +37,11 @@ public class FpagoController {
                                      rs.getLong("NRECIBOS"));
                 lista.add(fp);
             }
-        }         
+        }
+        catch (SQLException e) 
+        {
+            e.printStackTrace();
+        }
         return lista;   
     }
     
@@ -61,6 +65,10 @@ public class FpagoController {
                 }
             }
         } 
+        catch (SQLException e) 
+        {
+            e.printStackTrace();
+        }
         return fp;
     }
     
@@ -79,6 +87,10 @@ public class FpagoController {
             
             filasAfectadas = st.executeUpdate();
         }
+        catch (SQLException e) 
+        {
+            e.printStackTrace();
+        }
         return filasAfectadas;
     }
     
@@ -94,6 +106,10 @@ public class FpagoController {
                     
             filasAfectadas = st.executeUpdate();
         } 
+        catch (SQLException e) 
+        {
+            e.printStackTrace();
+        }
         
         return filasAfectadas;
     }

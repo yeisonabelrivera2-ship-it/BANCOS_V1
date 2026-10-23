@@ -283,9 +283,9 @@ public class JDialogFpago extends javax.swing.JDialog {
         
         if (validarAñadirFpago() == false) {
         return;
-    }
+        }
     
-    try {
+        try {
         String codigo = JTextFieldCodigo.getText().trim().toUpperCase();
             if (validarPKCrearFpago(codigo) == false) {
             return;
@@ -294,19 +294,16 @@ public class JDialogFpago extends javax.swing.JDialog {
         String descripcion = JTextFieldDescripcion.getText().trim();
         long recibos = Long.parseLong(JTextFieldRecibos.getText().trim());
         
-        // 3. Confirmar con el usuario si desea crear el registro
         if (crearSIoNo() == false) {
             return;
         }
-        
-        // 4. Crear el objeto e insertarlo mediante el controlador
+       
         Fpago nuevo = new Fpago(codigo, descripcion, recibos);
         FPcontrolador.create(nuevo);
         
         JOptionPane.showMessageDialog(this, "¡Forma de pago creada correctamente!");
         limpiarCampos();
         
-        // 5. Refrescar la tabla con la lista actualizada
         ArrayList<Fpago> lista = FPcontrolador.readAll();
         
         if (lista.isEmpty()) {
@@ -315,9 +312,9 @@ public class JDialogFpago extends javax.swing.JDialog {
         
         CargarTabla(lista);
         
-    } catch (SQLException e) {
-        JOptionPane.showMessageDialog(this, "ERROR: " + e.getMessage());
-    }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "ERROR: " + e.getMessage());
+        }
 
     }//GEN-LAST:event_JButtonCreateActionPerformed
 
@@ -336,7 +333,6 @@ public class JDialogFpago extends javax.swing.JDialog {
             
             if (fpEliminado == null) 
             {
-                //CAMBIAR EL MENSAJE DE ERROR 
                 JOptionPane.showMessageDialog(this, "ERROR: el objeto es null");
                 return;
             }
@@ -373,22 +369,20 @@ public class JDialogFpago extends javax.swing.JDialog {
     }//GEN-LAST:event_JTableTablaMouseClicked
 
     private void JButtonUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonUpdateActionPerformed
-       if (validarModificarFpago() == false) {
+    
+    if (validarModificarFpago() == false) {
         return;
     }
-    
-    // 2. Validar que no se intente modificar el código (PK)
+
     if (validarPKModificarFpago() == false) {
         return;
     }
-    
-    // 3. Preguntar si está seguro de modificar
+
     if (ActualizarSIoNo() == false) {
         return;
     }
     
     try {
-        // 4. Capturar datos y actualizar en la base de datos
         String codigo = JTextFieldCodigo.getText().trim().toUpperCase();
         String descripcion = JTextFieldDescripcion.getText().trim().toUpperCase();
         long recibos = Long.parseLong(JTextFieldRecibos.getText().trim());
@@ -759,37 +753,37 @@ public class JDialogFpago extends javax.swing.JDialog {
     }
     
     public boolean validarPKModificarFpago() {
-    try {
-        int filaSeleccionada = JTableTabla.getSelectedRow();
-        if (filaSeleccionada != -1) {
-            String pkOriginal = JTableTabla.getValueAt(filaSeleccionada, 0).toString().trim().toUpperCase();
-            String pkActual = JTextFieldCodigo.getText().trim().toUpperCase();
-            
-            if (!pkOriginal.equals(pkActual)) {
-                JOptionPane.showMessageDialog(this, "No se puede modificar la clave primaria");
-                return false; // Falla porque intentó cambiar el código
+        try {
+            int filaSeleccionada = JTableTabla.getSelectedRow();
+            if (filaSeleccionada != -1) {
+                String pkOriginal = JTableTabla.getValueAt(filaSeleccionada, 0).toString().trim().toUpperCase();
+                String pkActual = JTextFieldCodigo.getText().trim().toUpperCase();
+
+                if (!pkOriginal.equals(pkActual)) {
+                    JOptionPane.showMessageDialog(this, "No se puede modificar la clave primaria");
+                    return false; 
+                }
             }
+            return true; 
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "ERROR: " + e.getMessage());
+            return false;
         }
-        return true; // Todo correcto, no cambió la PK
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, "ERROR: " + e.getMessage());
-        return false;
     }
-}
     
-  public boolean validarPKCrearFpago(String codigo) {
-    try {
-        Fpago fpExistente = FPcontrolador.readById(codigo);
-        
-        if (fpExistente != null) {
-            JOptionPane.showMessageDialog(this, "Ya existe una forma de pago con el código " + codigo);
-            return false; // Ya existe, devolvemos false para detener el proceso
-        }
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, "ERROR: " + e.getMessage());
-        return false;
+    public boolean validarPKCrearFpago(String codigo) {
+      try {
+          Fpago fpExistente = FPcontrolador.readById(codigo);
+
+          if (fpExistente != null) {
+              JOptionPane.showMessageDialog(this, "Ya existe una forma de pago con el código " + codigo);
+              return false; 
+          }
+      } catch (Exception e) {
+          JOptionPane.showMessageDialog(this, "ERROR: " + e.getMessage());
+          return false;
+      }
+      return true;
     }
-    return true; // Todo correcto, el código está libre
-}
     
 }
