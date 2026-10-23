@@ -85,6 +85,7 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
         jTextFieldNumeroReciboAPagar = new javax.swing.JTextField();
         jToolBar2 = new javax.swing.JToolBar();
         jButtonPagarRerecibo = new javax.swing.JButton();
+        jButtonImprimirRecibo = new javax.swing.JButton();
         jButtonImporteRestantePorPagar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -272,6 +273,14 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
         jButtonPagarRerecibo.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonPagarRerecibo.addActionListener(this::jButtonPagarRereciboActionPerformed);
         jToolBar2.add(jButtonPagarRerecibo);
+
+        jButtonImprimirRecibo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/reciboImprimir.png"))); // NOI18N
+        jButtonImprimirRecibo.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButtonImprimirRecibo.setFocusable(false);
+        jButtonImprimirRecibo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButtonImprimirRecibo.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButtonImprimirRecibo.addActionListener(this::jButtonImprimirReciboActionPerformed);
+        jToolBar2.add(jButtonImprimirRecibo);
 
         jButtonImporteRestantePorPagar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/restanteDeuda.png"))); // NOI18N
         jButtonImporteRestantePorPagar.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
@@ -604,6 +613,25 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
         
 
     }//GEN-LAST:event_jButtonImporteRestantePorPagarActionPerformed
+
+    private void jButtonImprimirReciboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonImprimirReciboActionPerformed
+        // TODO add your handling code here:
+        
+        if (validarImprimirRecibo() == false) 
+        {
+            return;
+        }
+        
+        int fila = jTableRecibos.getSelectedRow();
+        
+        String numPrestamo = jTableRecibos.getValueAt(fila, 0).toString().trim();
+        String numRecibo = jTableRecibos.getValueAt(fila, 1).toString().trim();
+        String fechaRecibo = jTableRecibos.getValueAt(fila, 2).toString().trim();
+        String importe = jTableRecibos.getValueAt(fila, 3).toString().trim();
+        String fechaPago = jTableRecibos.getValueAt(fila, 4).toString().trim();
+        
+        generarPDF(numPrestamo,numRecibo,fechaRecibo,importe,fechaPago);
+    }//GEN-LAST:event_jButtonImprimirReciboActionPerformed
     
     /**
      * @param args the command line arguments
@@ -649,6 +677,7 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
     private javax.swing.JButton jButtonCreate;
     private javax.swing.JButton jButtonDelete;
     private javax.swing.JButton jButtonImporteRestantePorPagar;
+    private javax.swing.JButton jButtonImprimirRecibo;
     private javax.swing.JButton jButtonPagarRerecibo;
     private javax.swing.JButton jButtonRead;
     private javax.swing.JButton jButtonReadById;
@@ -967,6 +996,206 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
         return true;
     }
 
+    
+    public boolean validarImprimirRecibo()
+    {
+        int seleccion = jTableRecibos.getSelectedRow();
+        
+        if (seleccion == -1) 
+        {
+            JOptionPane.showMessageDialog(this, "Selecciona un recibo para imprimir.");
+            return false;
+        }
+        
+        Object fechaPago = jTableRecibos.getValueAt(seleccion,4);
+
+        if (fechaPago == null || fechaPago.toString().trim().isEmpty()) 
+        {
+            JOptionPane.showMessageDialog(this,"Solo puedes imprimir recibos que estén pagados.");
+            return false;
+        }
+        
+        return true;
+    }
+   
+    
+   private void generarPDF(String numPrestamo, String numRecibo,
+        String fechaRecibo, String importe, String fechaPago) {
+
+    javax.swing.JFileChooser selector = new javax.swing.JFileChooser();
+
+    selector.setSelectedFile(
+            new java.io.File("Recibo_" + numPrestamo + "_" + numRecibo + ".pdf")
+    );
+
+    if (selector.showSaveDialog(this)
+            != javax.swing.JFileChooser.APPROVE_OPTION) {
+        return;
+    }
+
+    java.io.File archivo = selector.getSelectedFile();
+
+    if (!archivo.getName().toLowerCase().endsWith(".pdf")) {
+        archivo = new java.io.File(archivo.getAbsolutePath() + ".pdf");
+    }
+
+    try (org.apache.pdfbox.pdmodel.PDDocument documento
+            = new org.apache.pdfbox.pdmodel.PDDocument()) {
+
+        org.apache.pdfbox.pdmodel.PDPage pagina =
+                new org.apache.pdfbox.pdmodel.PDPage(
+                        org.apache.pdfbox.pdmodel.common.PDRectangle.A4);
+
+        documento.addPage(pagina);
+
+        org.apache.pdfbox.pdmodel.font.PDFont normal =
+                new org.apache.pdfbox.pdmodel.font.PDType1Font(
+                        org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.HELVETICA);
+
+        org.apache.pdfbox.pdmodel.font.PDFont negrita =
+                new org.apache.pdfbox.pdmodel.font.PDType1Font(
+                        org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.HELVETICA_BOLD);
+
+        try (org.apache.pdfbox.pdmodel.PDPageContentStream cs =
+                new org.apache.pdfbox.pdmodel.PDPageContentStream(documento, pagina)) {
+
+            float ancho = pagina.getMediaBox().getWidth();
+            float margen = 55;
+            float derecha = ancho - margen;
+
+            // Marco exterior
+            cs.setStrokingColor(0.75f, 0.78f, 0.82f);
+            cs.setLineWidth(1);
+            cs.addRect(margen, 90, ancho - 2 * margen, 660);
+            cs.stroke();
+
+            // Encabezado
+            cs.setNonStrokingColor(0.10f, 0.22f, 0.33f);
+            cs.beginText();
+            cs.setFont(negrita, 22);
+            cs.newLineAtOffset(margen + 20, 705);
+            cs.showText("JUSTIFICANTE DE PAGO");
+            cs.endText();
+
+            cs.setNonStrokingColor(0.35f, 0.39f, 0.43f);
+            cs.beginText();
+            cs.setFont(normal, 10);
+            cs.newLineAtOffset(margen + 20, 685);
+            cs.showText("DOCUMENTO ACREDITATIVO DEL PAGO");
+            cs.endText();
+
+            // Línea del encabezado
+            cs.setStrokingColor(0.10f, 0.35f, 0.55f);
+            cs.setLineWidth(2);
+            cs.moveTo(margen + 20, 665);
+            cs.lineTo(derecha - 20, 665);
+            cs.stroke();
+
+            // Sección de datos
+            cs.setNonStrokingColor(0.10f, 0.22f, 0.33f);
+            cs.beginText();
+            cs.setFont(negrita, 12);
+            cs.newLineAtOffset(margen + 20, 630);
+            cs.showText("DATOS DEL RECIBO");
+            cs.endText();
+
+            // Datos del recibo
+            escribirLinea(cs, negrita, normal,
+                    "Numero de prestamo", numPrestamo, 600, margen + 20);
+
+            escribirLinea(cs, negrita, normal,
+                    "Numero de recibo", numRecibo, 565, margen + 20);
+
+            escribirLinea(cs, negrita, normal,
+                    "Fecha del recibo", fechaRecibo, 530, margen + 20);
+
+            escribirLinea(cs, negrita, normal,
+                    "Fecha de pago", fechaPago, 495, margen + 20);
+
+            // Separador
+            cs.setStrokingColor(0.82f, 0.84f, 0.86f);
+            cs.setLineWidth(1);
+            cs.moveTo(margen + 20, 465);
+            cs.lineTo(derecha - 20, 465);
+            cs.stroke();
+
+            // Importe destacado
+            cs.setNonStrokingColor(0.10f, 0.35f, 0.55f);
+            cs.beginText();
+            cs.setFont(negrita, 13);
+            cs.newLineAtOffset(margen + 20, 425);
+            cs.showText("IMPORTE PAGADO");
+            cs.endText();
+
+            cs.setNonStrokingColor(0.10f, 0.22f, 0.33f);
+            cs.beginText();
+            cs.setFont(negrita, 25);
+            cs.newLineAtOffset(margen + 20, 385);
+            cs.showText(importe + " EUR");
+            cs.endText();
+
+            // Mensaje final
+            cs.setNonStrokingColor(0.29f, 0.33f, 0.37f);
+            cs.beginText();
+            cs.setFont(normal, 10);
+            cs.newLineAtOffset(margen + 20, 325);
+            cs.showText("Este documento acredita el pago del recibo indicado.");
+            cs.endText();
+
+            cs.beginText();
+            cs.setFont(normal, 10);
+            cs.newLineAtOffset(margen + 20, 307);
+            cs.showText("Conserve este justificante como comprobante.");
+            cs.endText();
+
+            // Pie del documento
+            cs.setStrokingColor(0.82f, 0.84f, 0.86f);
+            cs.moveTo(margen + 20, 145);
+            cs.lineTo(derecha - 20, 145);
+            cs.stroke();
+
+            cs.setNonStrokingColor(0.43f, 0.47f, 0.51f);
+            cs.beginText();
+            cs.setFont(normal, 9);
+            cs.newLineAtOffset(margen + 20, 125);
+            cs.showText("Gracias por su pago.");
+            cs.endText();
+        }
+
+        documento.save(archivo);
+
+        JOptionPane.showMessageDialog(this,
+                "Recibo PDF generado correctamente:\n"
+                + archivo.getAbsolutePath());
+
+    } catch (java.io.IOException e) {
+        JOptionPane.showMessageDialog(this,
+                "Error al generar el PDF: " + e.getMessage(),
+                "Error", JOptionPane.ERROR_MESSAGE);
+    }
+}
+
+private void escribirLinea(
+        org.apache.pdfbox.pdmodel.PDPageContentStream cs,
+        org.apache.pdfbox.pdmodel.font.PDFont negrita,
+        org.apache.pdfbox.pdmodel.font.PDFont normal,
+        String etiqueta, String valor, float y, float x)
+        throws java.io.IOException {
+
+    cs.setNonStrokingColor(0.27f, 0.31f, 0.35f);
+    cs.beginText();
+    cs.setFont(negrita, 11);
+    cs.newLineAtOffset(x, y);
+    cs.showText(etiqueta + ":");
+    cs.endText();
+
+    cs.setNonStrokingColor(0.14f, 0.16f, 0.18f);
+    cs.beginText();
+    cs.setFont(normal, 11);
+    cs.newLineAtOffset(x + 190, y);
+    cs.showText(valor);
+    cs.endText();
+}
    
 }
 
