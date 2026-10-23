@@ -255,6 +255,11 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
                 return canEdit [columnIndex];
             }
         });
+        jTableRecibos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTableRecibosMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(jTableRecibos);
 
         jTextFieldNumeroReciboAPagar.setEditable(false);
@@ -264,6 +269,7 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
 
         jButtonCrearRecibo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/crearRecibo.png"))); // NOI18N
         jButtonCrearRecibo.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButtonCrearRecibo.addActionListener(this::jButtonCrearReciboActionPerformed);
         jToolBar2.add(jButtonCrearRecibo);
 
         jButtonPagarRerecibo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pagarRecibo.png"))); // NOI18N
@@ -514,6 +520,66 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
         }
         
     }//GEN-LAST:event_jButtonUpdateActionPerformed
+
+    private void jButtonCrearReciboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCrearReciboActionPerformed
+            if (!validarBusquedaId()) {
+            return;
+        }
+
+        String numPrestTexto = jTextFieldNumero.getText().trim();
+        String numRecibTexto = jTextFieldNumeroReciboAPagar.getText().trim();
+
+        if (numRecibTexto.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Por favor, introduce el numero de recibo que deseas pagar. ");
+            return;
+        }
+
+        try {
+            int numPrest = Integer.parseInt(numPrestTexto);
+            int numRecib = Integer.parseInt(numRecibTexto);
+
+            LocalDate fechaActual = LocalDate.now();
+
+            int respuesta = JOptionPane.showConfirmDialog(this, "¿Deseas registrar el pago del recibo " + numRecib + " con fecha de hoy (" + fechaActual + ")?", "Confirmacion de Pago", JOptionPane.YES_NO_OPTION);
+
+            if (respuesta != JOptionPane.YES_OPTION) {
+                return;
+            }
+
+            // USAMOS EL CONTROLADOR Y EL PAGARRECIBO
+            int filasAfectadas = RScontrolador.pagarRecibo(numPrest, numRecib, fechaActual);
+
+            if (filasAfectadas > 0) {
+                JOptionPane.showMessageDialog(this, "¡Recibo pagado correctamente!");
+
+                ArrayList<Recibos> listaRecibos = RScontrolador.findById(numPrestTexto);
+                cargarTablaRecibos(listaRecibos);
+
+                jTextFieldNumeroReciboAPagar.setText("");
+            } else {
+                JOptionPane.showMessageDialog(this, "No se encontro el recibo o ya estaba pagado.");
+            }
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "ERROR: El valor introducido es incorrecto");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "ERROR: " + e.getMessage());
+        }
+
+
+    }//GEN-LAST:event_jButtonCrearReciboActionPerformed
+
+    private void jTableRecibosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableRecibosMouseClicked
+        int seleccionado = jTableRecibos.getSelectedRow();
+
+        if (seleccionado != -1) {
+            Object numRecibo = jTableRecibos.getValueAt(seleccionado, 1);
+
+            if (numRecibo != null) {
+                jTextFieldNumeroReciboAPagar.setText(numRecibo.toString());
+            }
+        }
+    }//GEN-LAST:event_jTableRecibosMouseClicked
     
     /**
      * @param args the command line arguments
