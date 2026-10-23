@@ -546,7 +546,7 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
         String numPrestTexto = jTextFieldNumero.getText().trim();
         String numRecibTexto = jTextFieldNumeroReciboAPagar.getText().trim();
 
-        if (numRecibTexto.isEmpty()) {
+        if(numRecibTexto.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Por favor, introduce el numero de recibo que deseas pagar. ");
             return;
         }
@@ -554,6 +554,11 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
         try {
             int numPrest = Integer.parseInt(numPrestTexto);
             int numRecib = Integer.parseInt(numRecibTexto);
+
+            if (RScontrolador.estaPagado(numPrest, numRecib)) {
+                JOptionPane.showMessageDialog(this, "Este recibo ya se encuentra pagado.");
+                return;
+            }
 
             LocalDate fechaActual = LocalDate.now();
 
@@ -563,7 +568,6 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
                 return;
             }
 
-            // USAMOS EL CONTROLADOR Y EL PAGARRECIBO
             int filasAfectadas = RScontrolador.pagarRecibo(numPrest, numRecib, fechaActual);
 
             if (filasAfectadas > 0) {
@@ -574,7 +578,7 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
 
                 jTextFieldNumeroReciboAPagar.setText("");
             } else {
-                JOptionPane.showMessageDialog(this, "No se encontro el recibo o ya estaba pagado.");
+                JOptionPane.showMessageDialog(this, "No se encontro el recibo.");
             }
 
         } catch (NumberFormatException e) {
