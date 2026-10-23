@@ -330,64 +330,61 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCreateActionPerformed
-try {
+    try {
     
-    String numTexto = jTextFieldNumero.getText().trim();
-    String fechaTexto = jTextFieldFecha.getText().trim();
-    String impPrestTexto = jTextFieldImporte.getText().trim();
-    String impReciTexto = jTextFieldImporteRecibo.getText().trim();
+        String numTexto = jTextFieldNumero.getText().trim();
+        String fechaTexto = jTextFieldFecha.getText().trim();
+        String impPrestTexto = jTextFieldImporte.getText().trim();
+        String impReciTexto = jTextFieldImporteRecibo.getText().trim();
     
    
-    if (numTexto.isEmpty() || impPrestTexto.isEmpty() || impReciTexto.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "Por favor, rellena los campos obligatorios (Número e Importes).", "Campos vacíos", JOptionPane.WARNING_MESSAGE);
-        return;
-    }
+        if (numTexto.isEmpty() || impPrestTexto.isEmpty() || impReciTexto.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Por favor, rellena los campos obligatorios (Número e Importes).", "Campos vacíos", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
-    int numPrest = Integer.parseInt(numTexto);
-    
-    if (validarPKCrear(numPrest) == false) {
-        return; 
-    }
+        int numPrest = Integer.parseInt(numTexto);
 
-    double impPrest = Double.parseDouble(impPrestTexto);
-    double impReci = Double.parseDouble(impReciTexto);
+        if (validarPKCrear(numPrest) == false) {
+            return; 
+        }
+
+        double impPrest = Double.parseDouble(impPrestTexto);
+        double impReci = Double.parseDouble(impReciTexto);
         
-  if (impReci > impPrest) {
-        JOptionPane.showMessageDialog(this, "El importe del recibo (" + impReci + ") no puede ser mayor que el importe total del préstamo (" + impPrest + ").");
-        return; 
-    }
+        if (impReci > impPrest) {
+              JOptionPane.showMessageDialog(this, "El importe del recibo (" + impReci + ") no puede ser mayor que el importe total del préstamo (" + impPrest + ").");
+              return; 
+          }
         
-    LocalDate fecha = fechaTexto.isEmpty() ? LocalDate.now() : LocalDate.parse(fechaTexto);
-    
-    String codFPago = jComboBoxFormasPago.getSelectedItem().toString();
+        LocalDate fecha = fechaTexto.isEmpty() ? LocalDate.now() : LocalDate.parse(fechaTexto);
+        String codFPago = jComboBoxFormasPago.getSelectedItem().toString();
+        Prestamos nuevoPrestamo = new Prestamos(numPrest, fecha, impPrest, impReci, codFPago);
 
-    Prestamos nuevoPrestamo = new Prestamos(numPrest, fecha, impPrest, impReci, codFPago);
+        int filasAfectadas = PScontrolador.create(nuevoPrestamo); 
 
-    int filasAfectadas = PScontrolador.create(nuevoPrestamo); 
+        if (filasAfectadas > 0) {
+            JOptionPane.showMessageDialog(this, "¡Préstamo creado correctamente!");
 
-    if (filasAfectadas > 0) {
-        JOptionPane.showMessageDialog(this, "¡Préstamo creado correctamente!");
+            cargarTablaPrestamos(PScontrolador.readAll());
 
-        cargarTablaPrestamos(PScontrolador.readAll());
+            int prestamosGenerados = RScontrolador.generarRecibos2(numPrest, impReci);
 
-        int prestamosGenerados = RScontrolador.generarRecibos2(numPrest, impReci);
-       
-        limpiarCampos();
-    } else {
-        JOptionPane.showMessageDialog(this, "No se pudo crear el préstamo en la base de datos.", "Error", JOptionPane.ERROR_MESSAGE);
-    }
+            limpiarCampos();
+        } else {
+            JOptionPane.showMessageDialog(this, "No se pudo crear el préstamo en la base de datos.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
 
-    } catch (NumberFormatException e) {
-        JOptionPane.showMessageDialog(this, "Error de formato: El número de préstamo y los importes deben ser valores numéricos.", "Error de formato", JOptionPane.ERROR_MESSAGE);
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, "Ocurrió un error inesperado: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-    }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Error de formato: El número de préstamo y los importes deben ser valores numéricos.", "Error de formato", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Ocurrió un error inesperado: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
 
     }//GEN-LAST:event_jButtonCreateActionPerformed
 
     private void jButtonReadByIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonReadByIdActionPerformed
-        // TODO add your handling code here:
-        
+       
         if (validarBusquedaId() == false) 
         {
             return;
@@ -419,26 +416,22 @@ try {
     }//GEN-LAST:event_jButtonReadByIdActionPerformed
 
     private void jTablePrestamosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTablePrestamosMouseClicked
-        // TODO add your handling code here:
+       
         cargarCamposTabla();
         
-        
-        String id = jTextFieldNumero.getText().trim();
-        
+        String id = jTextFieldNumero.getText().trim();        
         ArrayList<Recibos> lista = RScontrolador.findById(id);
         cargarTablaRecibos(lista);
     }//GEN-LAST:event_jTablePrestamosMouseClicked
 
     private void jButtonReadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonReadActionPerformed
-        // TODO add your handling code here:
-        
+              
         ArrayList<Prestamos> lista = PScontrolador.readAll();
         cargarTablaPrestamos(lista);
         
     }//GEN-LAST:event_jButtonReadActionPerformed
 
     private void jButtonDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeleteActionPerformed
-        // TODO add your handling code here:
         
         if (cargarCamposTabla() == false) 
         {
@@ -460,8 +453,6 @@ try {
             return;
         }
         
-        
-        
         RScontrolador.deleteByPrestamoId(id);
         
         int filasAfectadas = PScontrolador.deleteById(id);
@@ -477,60 +468,60 @@ try {
         } else {
             JOptionPane.showMessageDialog(this, "Error al eliminar el prestamo en la base de datos.");
         }
-        
-        
+      
     }//GEN-LAST:event_jButtonDeleteActionPerformed
 
     private void jButtonUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonUpdateActionPerformed
-        // TODO add your handling code here:
-        
-        
+       
         if (validarBusquedaId() == false) { 
         return;
-    }
+        }
     
-    if (validarPKModificar() == false) {
-        return;
-    }
-    
-    if (ActualizarSIoNo() == false) { 
-        return;
-    }
-        
-    if (validarNoTocarPrestamo() == false) 
-    {
-        return;
-    }
-    
-    try {
-        int numPrest = Integer.parseInt(jTextFieldNumero.getText().trim());
-        String fechaTexto = jTextFieldFecha.getText().trim();
-        double impPrest = Double.parseDouble(jTextFieldImporte.getText().trim());
-        double impReci = Double.parseDouble(jTextFieldImporteRecibo.getText().trim());
-        
-        java.time.LocalDate fecha = fechaTexto.isEmpty() ? java.time.LocalDate.now() : java.time.LocalDate.parse(fechaTexto);
-        String codFPago = jComboBoxFormasPago.getSelectedItem().toString();
+        if (validarPKModificar() == false) {
+            return;
+        }
 
-        Prestamos prestamoModificado = new Prestamos(numPrest, fecha, impPrest, impReci, codFPago);
-        int filasAfectadas = PScontrolador.update(prestamoModificado);
-        
-        if (filasAfectadas > 0) {
-            JOptionPane.showMessageDialog(this, "¡Préstamo modificado correctamente!");
+        if (ActualizarSIoNo() == false) { 
+            return;
         }
-        
-        ArrayList<Prestamos> lista = PScontrolador.readAll();
-        if (lista.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "La lista está vacía");
-        }
-        cargarTablaPrestamos(lista);
-        limpiarCampos();
 
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "ERROR de formato numérico: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "ERROR: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        if (validarNoTocarPrestamo() == false) 
+        {
+            return;
         }
-        
+        if (validarPagoNoSuperiorPrestamo() == false) 
+        {
+            return;
+        }
+
+        try {
+            int numPrest = Integer.parseInt(jTextFieldNumero.getText().trim());
+            String fechaTexto = jTextFieldFecha.getText().trim();
+            double impPrest = Double.parseDouble(jTextFieldImporte.getText().trim());
+            double impReci = Double.parseDouble(jTextFieldImporteRecibo.getText().trim());
+
+            LocalDate fecha = fechaTexto.isEmpty() ? java.time.LocalDate.now() : java.time.LocalDate.parse(fechaTexto);
+            String codFPago = jComboBoxFormasPago.getSelectedItem().toString();
+
+            Prestamos prestamoModificado = new Prestamos(numPrest, fecha, impPrest, impReci, codFPago);
+            int filasAfectadas = PScontrolador.update(prestamoModificado);
+
+            if (filasAfectadas > 0) {
+                JOptionPane.showMessageDialog(this, "¡Préstamo modificado correctamente!");
+            }
+
+            ArrayList<Prestamos> lista = PScontrolador.readAll();
+            if (lista.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "La lista está vacía");
+            }
+            cargarTablaPrestamos(lista);
+            limpiarCampos();
+
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "ERROR de formato numérico: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "ERROR: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
     }//GEN-LAST:event_jButtonUpdateActionPerformed
 
     private void jTableRecibosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableRecibosMouseClicked
@@ -538,96 +529,90 @@ try {
     }//GEN-LAST:event_jTableRecibosMouseClicked
 
     private void jButtonPagarRereciboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPagarRereciboActionPerformed
-if (!validarBusquedaId()) {
-        return;
-    }
-
-    String numPrestTexto = jTextFieldNumero.getText().trim();
-
-    int filaSeleccionada = jTableRecibos.getSelectedRow();
-    
-    if (filaSeleccionada == -1) {
-        JOptionPane.showMessageDialog(this, "Por favor, selecciona un recibo de la tabla para pagar.", "Recibo no seleccionado", JOptionPane.WARNING_MESSAGE);
-        return;
-    }
-
-    Object valorRecibo = jTableRecibos.getValueAt(filaSeleccionada, 1);
-    String numRecibTexto = valorRecibo != null ? valorRecibo.toString().trim() : "";
-
-    if (numRecibTexto.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "Por favor, selecciona un número de recibo válido de la tabla.");
-        return;
-    }
-
-    try {
-        int numPrest = Integer.parseInt(numPrestTexto);
-        int numRecib = Integer.parseInt(numRecibTexto);
-
-        if (RScontrolador.estaPagado(numPrest, numRecib)) {
-            JOptionPane.showMessageDialog(this, "Este recibo ya se encuentra pagado.");
+        if (!validarBusquedaId()) {
             return;
         }
 
-        LocalDate fechaActual = LocalDate.now();
+        String numPrestTexto = jTextFieldNumero.getText().trim();
 
-        int respuesta = JOptionPane.showConfirmDialog(this, "¿Deseas registrar el pago del recibo " + numRecib + " con fecha de hoy (" + fechaActual + ")?", "Confirmacion de Pago", JOptionPane.YES_NO_OPTION);
+        int filaSeleccionada = jTableRecibos.getSelectedRow();
 
-        if (respuesta != JOptionPane.YES_OPTION) {
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(this, "Por favor, selecciona un recibo de la tabla para pagar.", "Recibo no seleccionado", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        int filasAfectadas = RScontrolador.pagarRecibo(numPrest, numRecib, fechaActual);
+        Object valorRecibo = jTableRecibos.getValueAt(filaSeleccionada, 1);
+        String numRecibTexto = valorRecibo != null ? valorRecibo.toString().trim() : "";
 
-        if (filasAfectadas > 0) {
-            JOptionPane.showMessageDialog(this, "¡Recibo pagado correctamente!");
-
-            ArrayList<Recibos> listaRecibos = RScontrolador.findById(numPrestTexto);
-            cargarTablaRecibos(listaRecibos);
-
-            // Nota: Ya no limpiamos jTextFieldNumeroReciboAPagar aquí porque ese campo ahora muestra la deuda.
-        } else {
-            JOptionPane.showMessageDialog(this, "No se encontro el recibo.");
+        if (numRecibTexto.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Por favor, selecciona un número de recibo válido de la tabla.");
+            return;
         }
 
-    } catch (NumberFormatException e) {
-        JOptionPane.showMessageDialog(this, "ERROR: El valor introducido es incorrecto");
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, "ERROR: " + e.getMessage());
-    }
+        try {
+            int numPrest = Integer.parseInt(numPrestTexto);
+            int numRecib = Integer.parseInt(numRecibTexto);
+
+            if (RScontrolador.estaPagado(numPrest, numRecib)) {
+                JOptionPane.showMessageDialog(this, "Este recibo ya se encuentra pagado.");
+                return;
+            }
+
+            LocalDate fechaActual = LocalDate.now();
+
+            int respuesta = JOptionPane.showConfirmDialog(this, "¿Deseas registrar el pago del recibo " + numRecib + " con fecha de hoy (" + fechaActual + ")?", "Confirmacion de Pago", JOptionPane.YES_NO_OPTION);
+
+            if (respuesta != JOptionPane.YES_OPTION) {
+                return;
+            }
+
+            int filasAfectadas = RScontrolador.pagarRecibo(numPrest, numRecib, fechaActual);
+
+            if (filasAfectadas > 0) {
+                JOptionPane.showMessageDialog(this, "¡Recibo pagado correctamente!");
+
+                ArrayList<Recibos> listaRecibos = RScontrolador.findById(numPrestTexto);
+                cargarTablaRecibos(listaRecibos);
+
+            } else {
+                JOptionPane.showMessageDialog(this, "No se encontro el recibo.");
+            }
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "ERROR: El valor introducido es incorrecto");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "ERROR: " + e.getMessage());
+        }
 
     }//GEN-LAST:event_jButtonPagarRereciboActionPerformed
 
     private void jButtonImporteRestantePorPagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonImporteRestantePorPagarActionPerformed
         String numTexto = jTextFieldNumero.getText().trim();
 
-    if (numTexto.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "Por favor, introduce o selecciona un número de prestamo.");
-        return;
-    }
+        if (numTexto.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Por favor, introduce o selecciona un número de prestamo.");
+            return;
+        }
 
-    try {
-        int numPrestamo = Integer.parseInt(numTexto);
+        try {
+            int numPrestamo = Integer.parseInt(numTexto);
 
-        double deudaPendiente = PScontrolador.calcularDeudaPrestamo(numPrestamo);
-        
-        jTextFieldNumeroReciboAPagar.setText(String.valueOf(deudaPendiente));
-        
-        // Opcional: Si además quieres mantener el mensaje emergente, déjalo; si no, puedes quitarlo.
-        JOptionPane.showMessageDialog(this, "El importe pendiente de pago para el prestamo " + numPrestamo + " es de: " + deudaPendiente + " €", "Deuda Pendiente", JOptionPane.INFORMATION_MESSAGE);
+            double deudaPendiente = PScontrolador.calcularDeudaPrestamo(numPrestamo);
 
-    } catch (NumberFormatException e) {
-        JOptionPane.showMessageDialog(this, "El numero de prestamo debe ser un valor numerico.");
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, "Ocurrio un error al calcular la deuda: " + e.getMessage());
-    }
+            jTextFieldNumeroReciboAPagar.setText(String.valueOf(deudaPendiente));
 
-        
+            JOptionPane.showMessageDialog(this, "El importe pendiente de pago para el prestamo " + numPrestamo + " es de: " + deudaPendiente + " €", "Deuda Pendiente", JOptionPane.INFORMATION_MESSAGE);
 
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "El numero de prestamo debe ser un valor numerico.");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Ocurrio un error al calcular la deuda: " + e.getMessage());
+        }
     }//GEN-LAST:event_jButtonImporteRestantePorPagarActionPerformed
 
     private void jButtonImprimirReciboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonImprimirReciboActionPerformed
-        // TODO add your handling code here:
-        
+     
         if (validarImprimirRecibo() == false) 
         {
             return;
@@ -1023,6 +1008,30 @@ if (!validarBusquedaId()) {
         if (fechaPago == null || fechaPago.toString().trim().isEmpty()) 
         {
             JOptionPane.showMessageDialog(this,"Solo puedes imprimir recibos que estén pagados.");
+            return false;
+        }
+        
+        return true;
+    }
+    
+    public boolean validarPagoNoSuperiorPrestamo()
+    {
+        int seleccion = jTableRecibos.getSelectedRow();
+        
+        if (seleccion == -1) 
+        {
+            JOptionPane.showMessageDialog(this, "Selecciona un recibo para imprimir.");
+            return false;
+        }
+        
+        String txtprestamo = jTablePrestamos.getValueAt(seleccion, 2).toString().trim();
+        String txtpago = jTextFieldImporteRecibo.getText().trim();
+        int prestamo = Integer.parseInt(txtprestamo);
+        int pago = Integer.parseInt(txtpago);
+        
+        if (prestamo != pago) 
+        {
+            JOptionPane.showMessageDialog(this, "No puedes pagar un monto mayor al prestamo");
             return false;
         }
         
