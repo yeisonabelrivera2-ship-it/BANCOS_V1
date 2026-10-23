@@ -274,6 +274,7 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
 
         jButtonPagarRerecibo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pagarRecibo.png"))); // NOI18N
         jButtonPagarRerecibo.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButtonPagarRerecibo.addActionListener(this::jButtonPagarRereciboActionPerformed);
         jToolBar2.add(jButtonPagarRerecibo);
 
         jButtonImporteRestantePorPagar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/restanteDeuda.png"))); // NOI18N
@@ -522,7 +523,23 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonUpdateActionPerformed
 
     private void jButtonCrearReciboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCrearReciboActionPerformed
-            if (!validarBusquedaId()) {
+
+    }//GEN-LAST:event_jButtonCrearReciboActionPerformed
+
+    private void jTableRecibosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableRecibosMouseClicked
+        int seleccionado = jTableRecibos.getSelectedRow();
+
+        if (seleccionado != -1) {
+            Object numRecibo = jTableRecibos.getValueAt(seleccionado, 1);
+
+            if (numRecibo != null) {
+                jTextFieldNumeroReciboAPagar.setText(numRecibo.toString());
+            }
+        }
+    }//GEN-LAST:event_jTableRecibosMouseClicked
+
+    private void jButtonPagarRereciboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPagarRereciboActionPerformed
+        if (!validarBusquedaId()) {
             return;
         }
 
@@ -565,19 +582,7 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "ERROR: " + e.getMessage());
         }
-    }//GEN-LAST:event_jButtonCrearReciboActionPerformed
-
-    private void jTableRecibosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableRecibosMouseClicked
-        int seleccionado = jTableRecibos.getSelectedRow();
-
-        if (seleccionado != -1) {
-            Object numRecibo = jTableRecibos.getValueAt(seleccionado, 1);
-
-            if (numRecibo != null) {
-                jTextFieldNumeroReciboAPagar.setText(numRecibo.toString());
-            }
-        }
-    }//GEN-LAST:event_jTableRecibosMouseClicked
+    }//GEN-LAST:event_jButtonPagarRereciboActionPerformed
     
     /**
      * @param args the command line arguments
