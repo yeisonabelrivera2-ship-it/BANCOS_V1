@@ -51,6 +51,49 @@ public class RecibosController {
         return listaRecibos;
     }
     
+        // SOLO PARA TESTING: devuelve el siguiente numero de recibo libre de un prestamo (MAX + 1)
+    public int siguienteNumRecibo(int numPrest) {
+        String sql = "SELECT COALESCE(MAX(NNUMRECIB), 0) + 1 FROM RECIBOS WHERE NNUMPREST = ?";
+
+        try (PreparedStatement st = con.prepareStatement(sql)) {
+            st.setInt(1, numPrest);
+
+            try (ResultSet rs = st.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return 1;
+    }
+
+    // Inserta un recibo. DFECPAGO puede ser null (recibo pendiente de pago)
+    public int create(Recibos rb) {
+        int filasAfectadas = 0;
+        String sql = "INSERT INTO RECIBOS(NNUMPREST, NNUMRECIB, DFECREC, NIMPREC, DFECPAGO) VALUES(?, ?, ?, ?, ?)";
+
+        try (PreparedStatement st = con.prepareStatement(sql)) {
+            st.setInt(1, rb.getNNUMPREST());
+            st.setInt(2, rb.getNNUMRECIB());
+            st.setDate(3, java.sql.Date.valueOf(rb.getDFECREC()));
+            st.setInt(4, rb.getNIMPREC());
+
+            if (rb.getDFECPAGO() == null) {
+                st.setNull(5, java.sql.Types.DATE);
+            } else {
+                st.setDate(5, java.sql.Date.valueOf(rb.getDFECPAGO()));
+            }
+
+            filasAfectadas = st.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println("Error al crear el recibo");
+            ex.printStackTrace();
+        }
+        return filasAfectadas;
+    }
+
     //Borra solo un prestamo seleccionado, con el Codigo del prestamo y del recibo
     //Si un recibo esta pagado no se puede borrar, comprobar con tieneRecibosPagados
     public int deleteById(int numPrest, int numRecib) {
