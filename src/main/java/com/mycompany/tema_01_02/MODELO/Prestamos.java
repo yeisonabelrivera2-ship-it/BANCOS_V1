@@ -3,66 +3,66 @@ package com.mycompany.tema_01_02.MODELO;
 import java.time.LocalDate;
 
 public class Prestamos {
-    private int numPrest;
-    private LocalDate fecPrest;
-    private double impPrest;
-    private double impReci;
-    private String codFPago;
+    private int NUMPREST;
+    private LocalDate FECPREST;
+    private double IMPPREST;
+    private double IMPRECI;
+    private String CODFPAGO;
 
     public Prestamos() {
     }
 
     public Prestamos(int numPrest, LocalDate fecPrest, double impPrest, double impReci, String codFPago) {
-        this.numPrest = numPrest;
-        this.fecPrest = fecPrest;
-        this.impPrest = impPrest;
-        this.impReci = impReci;
-        this.codFPago = codFPago;
+        this.NUMPREST = numPrest;
+        this.FECPREST = fecPrest;
+        this.IMPPREST = impPrest;
+        this.IMPRECI = impReci;
+        this.CODFPAGO = codFPago;
     }
 
     public int getNumPrest() {
-        return numPrest;
+        return NUMPREST;
     }
 
     public void setNumPrest(int numPrest) {
-        this.numPrest = numPrest;
+        this.NUMPREST = numPrest;
     }
 
     public LocalDate getFecPrest() {
-        return fecPrest;
+        return FECPREST;
     }
 
     public void setFecPrest(LocalDate fecPrest) {
-        this.fecPrest = fecPrest;
+        this.FECPREST = fecPrest;
     }
 
     public double getImpPrest() {
-        return impPrest;
+        return IMPPREST;
     }
 
     public void setImpPrest(double impPrest) {
-        this.impPrest = impPrest;
+        this.IMPPREST = impPrest;
     }
 
     public double getImpReci() {
-        return impReci;
+        return IMPRECI;
     }
 
     public void setImpReci(double impReci) {
-        this.impReci = impReci;
+        this.IMPRECI = impReci;
     }
 
     public String getCodFPago() {
-        return codFPago;
+        return CODFPAGO;
     }
 
     public void setCodFPago(String codFPago) {
-        this.codFPago = codFPago;
+        this.CODFPAGO = codFPago;
     }
 
     @Override
     public String toString() {
-        return "Prestamos{" + "numPrest=" + numPrest + ", fecPrest=" + fecPrest + ", impPrest=" + impPrest + ", impReci=" + impReci + ", codFPago=" + codFPago + '}';
+        return "Prestamos{" + "numPrest=" + NUMPREST + ", fecPrest=" + FECPREST + ", impPrest=" + IMPPREST + ", impReci=" + IMPRECI + ", codFPago=" + CODFPAGO + '}';
     }
     
 
