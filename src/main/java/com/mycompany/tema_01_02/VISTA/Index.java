@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package com.mycompany.tema_01_02.VISTA;
 
 import com.mycompany.tema_01_02.CONEXION.Conexion;
@@ -10,17 +6,14 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
-
 public class Index extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Index.class.getName());
-    
-    
+     
     private Conexion conexion;
     private Connection con;
     
-    public Index() {
-        
+    public Index() {     
         conexion = new Conexion();
         con = conexion.conectar();
         
@@ -101,8 +94,6 @@ public class Index extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void FORMASPAGOActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FORMASPAGOActionPerformed
-        // TODO add your handling code here:
-        
         JDialogFpago JDpago = new JDialogFpago(this, true, con);
         JDpago.setLocationRelativeTo(this);
         JDpago.setVisible(true);
@@ -110,17 +101,11 @@ public class Index extends javax.swing.JFrame {
     }//GEN-LAST:event_FORMASPAGOActionPerformed
 
     private void jButtonPrestamosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPrestamosActionPerformed
-        // TODO add your handling code here:
-        
         JDialogPrestamosRecibos JDPR = new JDialogPrestamosRecibos(this, true, con);
         JDPR.setLocationRelativeTo(this);
         JDPR.setVisible(true);
-        
     }//GEN-LAST:event_jButtonPrestamosActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -200,7 +185,10 @@ public class Index extends javax.swing.JFrame {
     javax.swing.UIManager.put("ScrollBar.thumbInsets", new java.awt.Insets(2, 2, 2, 2));
     javax.swing.UIManager.put("ScrollBar.width", 12);
     ///NO BORRAR LO DE ARRIBA
-        java.awt.EventQueue.invokeLater(() -> new Index().setVisible(true));
+
+        //java.awt.EventQueue.invokeLater(() -> new Index().setVisible(true));
+        Index ventana = new Index();
+        ventana.setVisible(true);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
