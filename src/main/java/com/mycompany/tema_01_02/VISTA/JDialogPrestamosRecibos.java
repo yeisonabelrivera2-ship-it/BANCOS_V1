@@ -7,6 +7,7 @@ import com.mycompany.tema_01_02.MODELO.Fpago;
 import com.mycompany.tema_01_02.MODELO.Prestamos;
 import com.mycompany.tema_01_02.MODELO.Recibos;
 import java.awt.event.MouseEvent;
+import java.awt.event.ActionEvent;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -528,7 +529,6 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
             if (!validarBusquedaId()) {
             return;
         }
-<<<<<<< HEAD
 
         String numPrestTexto = jTextFieldNumero.getText().trim();
         String numRecibTexto = jTextFieldNumeroReciboAPagar.getText().trim();
@@ -568,50 +568,9 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(this, "ERROR: El valor introducido es incorrecto");
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "ERROR: " + e.getMessage());
-        }
-    }//GEN-LAST:event_jButtonCrearReciboActionPerformed
-=======
->>>>>>> e8f77b7 (test)
+        
+    }                                                  
 
-        String numPrestTexto = jTextFieldNumero.getText().trim();
-        String numRecibTexto = jTextFieldNumeroReciboAPagar.getText().trim();
-
-        if (numRecibTexto.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Por favor, introduce el numero de recibo que deseas pagar. ");
-            return;
-        }
-
-        try {
-            int numPrest = Integer.parseInt(numPrestTexto);
-            int numRecib = Integer.parseInt(numRecibTexto);
-
-            LocalDate fechaActual = LocalDate.now();
-
-            int respuesta = JOptionPane.showConfirmDialog(this, "¿Deseas registrar el pago del recibo " + numRecib + " con fecha de hoy (" + fechaActual + ")?", "Confirmacion de Pago", JOptionPane.YES_NO_OPTION);
-
-            if (respuesta != JOptionPane.YES_OPTION) {
-                return;
-            }
-
-            // USAMOS EL CONTROLADOR Y EL PAGARRECIBO
-            int filasAfectadas = RScontrolador.pagarRecibo(numPrest, numRecib, fechaActual);
-
-            if (filasAfectadas > 0) {
-                JOptionPane.showMessageDialog(this, "¡Recibo pagado correctamente!");
-
-                ArrayList<Recibos> listaRecibos = RScontrolador.findById(numPrestTexto);
-                cargarTablaRecibos(listaRecibos);
-
-                jTextFieldNumeroReciboAPagar.setText("");
-            } else {
-                JOptionPane.showMessageDialog(this, "No se encontro el recibo o ya estaba pagado.");
-            }
-
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "ERROR: El valor introducido es incorrecto");
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "ERROR: " + e.getMessage());
-        }
 
 
     }//GEN-LAST:event_jButtonCrearReciboActionPerformed
@@ -989,6 +948,14 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
             return false;
         }     
         return true;
+    }
+
+    private void jButtonPagarRereciboActionPerformed(ActionEvent e) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    private void jButtonImporteRestantePorPagarActionPerformed(ActionEvent e) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }
 
