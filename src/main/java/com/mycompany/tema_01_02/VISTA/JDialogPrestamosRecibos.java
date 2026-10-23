@@ -528,6 +528,7 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
             if (!validarBusquedaId()) {
             return;
         }
+<<<<<<< HEAD
 
         String numPrestTexto = jTextFieldNumero.getText().trim();
         String numRecibTexto = jTextFieldNumeroReciboAPagar.getText().trim();
@@ -569,47 +570,63 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(this, "ERROR: " + e.getMessage());
         }
     }//GEN-LAST:event_jButtonCrearReciboActionPerformed
+=======
+>>>>>>> e8f77b7 (test)
 
-    private void jButtonPagarRereciboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPagarRereciboActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButtonPagarRereciboActionPerformed
+        String numPrestTexto = jTextFieldNumero.getText().trim();
+        String numRecibTexto = jTextFieldNumeroReciboAPagar.getText().trim();
 
-    private void jButtonImporteRestantePorPagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonImporteRestantePorPagarActionPerformed
-        // TODO add your handling code here:
-        
-      String numTexto = jTextFieldNumero.getText().trim();
-    
-    if (numTexto.isEmpty()) 
-    {
-        JOptionPane.showMessageDialog(this, "Por favor, introduce o selecciona un número de préstamo.");
-        return;
-    }
-    
-        try 
-        {
-            int numPrestamo = Integer.parseInt(numTexto);
+        if (numRecibTexto.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Por favor, introduce el numero de recibo que deseas pagar. ");
+            return;
+        }
 
-            double deudaPendiente = PScontrolador.calcularDeudaPrestamo(numPrestamo); // O RScontrolador según dónde lo hayas puesto
+        try {
+            int numPrest = Integer.parseInt(numPrestTexto);
+            int numRecib = Integer.parseInt(numRecibTexto);
 
-            JOptionPane.showMessageDialog(this, 
-                "El importe pendiente de pago para el préstamo " + numPrestamo + " es de: " + deudaPendiente + " €", 
-                "Deuda Pendiente", 
-                JOptionPane.INFORMATION_MESSAGE);
+            LocalDate fechaActual = LocalDate.now();
 
-        } 
-            catch (NumberFormatException e) 
-            {
-                JOptionPane.showMessageDialog(this, "El número de préstamo debe ser un valor numérico.", "Error de formato", JOptionPane.ERROR_MESSAGE);
-            } 
-            catch (Exception e) 
-            {
-                JOptionPane.showMessageDialog(this, "Ocurrió un error al calcular la deuda: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            int respuesta = JOptionPane.showConfirmDialog(this, "¿Deseas registrar el pago del recibo " + numRecib + " con fecha de hoy (" + fechaActual + ")?", "Confirmacion de Pago", JOptionPane.YES_NO_OPTION);
+
+            if (respuesta != JOptionPane.YES_OPTION) {
+                return;
             }
 
+            // USAMOS EL CONTROLADOR Y EL PAGARRECIBO
+            int filasAfectadas = RScontrolador.pagarRecibo(numPrest, numRecib, fechaActual);
 
-                                                                       
-    
-    }//GEN-LAST:event_jButtonImporteRestantePorPagarActionPerformed
+            if (filasAfectadas > 0) {
+                JOptionPane.showMessageDialog(this, "¡Recibo pagado correctamente!");
+
+                ArrayList<Recibos> listaRecibos = RScontrolador.findById(numPrestTexto);
+                cargarTablaRecibos(listaRecibos);
+
+                jTextFieldNumeroReciboAPagar.setText("");
+            } else {
+                JOptionPane.showMessageDialog(this, "No se encontro el recibo o ya estaba pagado.");
+            }
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "ERROR: El valor introducido es incorrecto");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "ERROR: " + e.getMessage());
+        }
+
+
+    }//GEN-LAST:event_jButtonCrearReciboActionPerformed
+
+    private void jTableRecibosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableRecibosMouseClicked
+        int seleccionado = jTableRecibos.getSelectedRow();
+
+        if (seleccionado != -1) {
+            Object numRecibo = jTableRecibos.getValueAt(seleccionado, 1);
+
+            if (numRecibo != null) {
+                jTextFieldNumeroReciboAPagar.setText(numRecibo.toString());
+            }
+        }
+    }//GEN-LAST:event_jTableRecibosMouseClicked
     
     /**
      * @param args the command line arguments
