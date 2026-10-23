@@ -44,38 +44,34 @@ public class Index extends javax.swing.JFrame {
     private void initComponents() {
 
         jToolBar1 = new javax.swing.JToolBar();
-        FORMASPAGO = new javax.swing.JButton();
-        jButtonPrestamos = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        jButtonPrestamos = new javax.swing.JButton();
+        FORMASPAGO = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jToolBar1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jToolBar1.setRollover(true);
 
-        FORMASPAGO.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        FORMASPAGO.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/formasDePago.png"))); // NOI18N
-        FORMASPAGO.setText("     Formas de Pago    ");
-        FORMASPAGO.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        FORMASPAGO.setFocusable(false);
-        FORMASPAGO.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        FORMASPAGO.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        FORMASPAGO.addActionListener(this::FORMASPAGOActionPerformed);
-        jToolBar1.add(FORMASPAGO);
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("BANCO V1");
 
         jButtonPrestamos.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButtonPrestamos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/PrestamosRecibos.png"))); // NOI18N
         jButtonPrestamos.setText(" Prestamos y Recibos ");
         jButtonPrestamos.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jButtonPrestamos.setFocusable(false);
         jButtonPrestamos.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonPrestamos.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jButtonPrestamos.addActionListener(this::jButtonPrestamosActionPerformed);
-        jToolBar1.add(jButtonPrestamos);
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("PROXIMAMENTE");
+        FORMASPAGO.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        FORMASPAGO.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/formasDePago.png"))); // NOI18N
+        FORMASPAGO.setText("     Formas de Pago    ");
+        FORMASPAGO.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        FORMASPAGO.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        FORMASPAGO.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        FORMASPAGO.addActionListener(this::FORMASPAGOActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -83,17 +79,28 @@ public class Index extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, 785, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addGap(213, 213, 213)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 348, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(209, 209, 209)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 348, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(125, 125, 125)
+                        .addComponent(FORMASPAGO, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(125, 125, 125)
+                        .addComponent(jButtonPrestamos, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(83, 83, 83)
+                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(29, 29, 29)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 186, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(FORMASPAGO, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
+                    .addComponent(jButtonPrestamos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(186, Short.MAX_VALUE))
         );
 
         pack();
@@ -145,14 +152,11 @@ public class Index extends javax.swing.JFrame {
     colores.put("@accentColor", "#007AFF");
     com.formdev.flatlaf.FlatLaf.setGlobalExtraDefaults(colores);
 
-    // 2. Barra de título integrada con la ventana (opcional)
     javax.swing.JFrame.setDefaultLookAndFeelDecorated(true);
     javax.swing.JDialog.setDefaultLookAndFeelDecorated(true);
-
-    // 3. Tema
+   
     com.formdev.flatlaf.themes.FlatMacLightLaf.setup();
 
-    // 4. Fuente: la más "Apple" que haya instalada
     String familia = "SansSerif";
     java.util.List<String> instaladas = java.util.Arrays.asList(
         java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames());
@@ -161,19 +165,16 @@ public class Index extends javax.swing.JFrame {
     }
     javax.swing.UIManager.put("defaultFont", new java.awt.Font(familia, java.awt.Font.PLAIN, 13));
 
-    // 5. Paneles con el gris suave de Apple
     java.awt.Color gris = new java.awt.Color(245, 247, 250);
     javax.swing.UIManager.put("Panel.background", gris);
     javax.swing.UIManager.put("TabbedPane.background", gris);
     javax.swing.UIManager.put("OptionPane.background", gris);
 
-    // 6. Bordes finos y esquinas redondeadas (campos y desplegables)
     javax.swing.UIManager.put("Component.borderColor", new java.awt.Color(210, 210, 215));
     javax.swing.UIManager.put("TextComponent.arc", 10);
     javax.swing.UIManager.put("ComboBox.arc", 10);
     javax.swing.UIManager.put("Spinner.arc", 10);
 
-    // 7. Campos en blanco, con aire por dentro
     for (String k : new String[]{"TextField", "FormattedTextField", "PasswordField",
                                  "TextArea", "ComboBox", "Spinner", "Table"}) {
         javax.swing.UIManager.put(k + ".background", java.awt.Color.WHITE);
@@ -183,7 +184,6 @@ public class Index extends javax.swing.JFrame {
     javax.swing.UIManager.put("PasswordField.margin", new java.awt.Insets(3, 8, 3, 8));
     javax.swing.UIManager.put("ComboBox.padding", new java.awt.Insets(3, 8, 3, 8));
 
-    // 8. Tablas limpias
     javax.swing.UIManager.put("Table.rowHeight", 32);
     javax.swing.UIManager.put("Table.showHorizontalLines", true);
     javax.swing.UIManager.put("Table.showVerticalLines", false);
@@ -194,12 +194,11 @@ public class Index extends javax.swing.JFrame {
     javax.swing.UIManager.put("TableHeader.bottomSeparatorColor", new java.awt.Color(210, 210, 215));
     javax.swing.UIManager.put("TableHeader.font", new java.awt.Font(familia, java.awt.Font.BOLD, 12));
 
-    // 9. Barras de scroll finas y redondas
     javax.swing.UIManager.put("ScrollBar.thumbArc", 999);
     javax.swing.UIManager.put("ScrollBar.trackArc", 999);
     javax.swing.UIManager.put("ScrollBar.thumbInsets", new java.awt.Insets(2, 2, 2, 2));
     javax.swing.UIManager.put("ScrollBar.width", 12);
-    ///NO BORRAR LO DE ARRIBA
+    
     Index ventana = new Index();    
     ventana.setVisible(true);
     }
