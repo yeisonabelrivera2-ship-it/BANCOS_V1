@@ -333,6 +333,11 @@ public class JDialogFpago extends javax.swing.JDialog {
         {
             Fpago fpEliminado = obneterFpago();
             
+            if (fpEliminado.getNRECIBOS() != 0) 
+            {
+                JOptionPane.showMessageDialog(this, "ERROR: No se puede borrar por que ya se ha usado esta forma de pago");
+                return;
+            }
             if (fpEliminado == null) 
             {
                 JOptionPane.showMessageDialog(this, "ERROR: el objeto es null");
