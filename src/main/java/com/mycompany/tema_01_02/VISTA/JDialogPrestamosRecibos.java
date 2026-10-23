@@ -950,13 +950,7 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
         return true;
     }
 
-    private void jButtonPagarRereciboActionPerformed(ActionEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    private void jButtonImporteRestantePorPagarActionPerformed(ActionEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+   
 }
 
 
