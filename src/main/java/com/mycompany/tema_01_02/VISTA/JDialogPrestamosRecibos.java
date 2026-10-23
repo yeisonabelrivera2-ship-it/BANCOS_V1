@@ -586,6 +586,62 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
             }
         }
     }//GEN-LAST:event_jTableRecibosMouseClicked
+
+    private void jButtonPagarRereciboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPagarRereciboActionPerformed
+        if (!validarBusquedaId()) {
+            return;
+        }
+
+        String numPrestTexto = jTextFieldNumero.getText().trim();
+        String numRecibTexto = jTextFieldNumeroReciboAPagar.getText().trim();
+
+        if(numRecibTexto.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Por favor, introduce el numero de recibo que deseas pagar. ");
+            return;
+        }
+
+        try {
+            int numPrest = Integer.parseInt(numPrestTexto);
+            int numRecib = Integer.parseInt(numRecibTexto);
+
+            if (RScontrolador.estaPagado(numPrest, numRecib)) {
+                JOptionPane.showMessageDialog(this, "Este recibo ya se encuentra pagado.");
+                return;
+            }
+
+            LocalDate fechaActual = LocalDate.now();
+
+            int respuesta = JOptionPane.showConfirmDialog(this, "¿Deseas registrar el pago del recibo " + numRecib + " con fecha de hoy (" + fechaActual + ")?", "Confirmacion de Pago", JOptionPane.YES_NO_OPTION);
+
+            if (respuesta != JOptionPane.YES_OPTION) {
+                return;
+            }
+
+            int filasAfectadas = RScontrolador.pagarRecibo(numPrest, numRecib, fechaActual);
+
+            if (filasAfectadas > 0) {
+                JOptionPane.showMessageDialog(this, "¡Recibo pagado correctamente!");
+
+                ArrayList<Recibos> listaRecibos = RScontrolador.findById(numPrestTexto);
+                cargarTablaRecibos(listaRecibos);
+
+                jTextFieldNumeroReciboAPagar.setText("");
+            } else {
+                JOptionPane.showMessageDialog(this, "No se encontro el recibo.");
+            }
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "ERROR: El valor introducido es incorrecto");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "ERROR: " + e.getMessage());
+        }
+    }//GEN-LAST:event_jButtonPagarRereciboActionPerformed
+
+    private void jButtonImporteRestantePorPagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonImporteRestantePorPagarActionPerformed
+        
+        
+
+    }//GEN-LAST:event_jButtonImporteRestantePorPagarActionPerformed
     
     /**
      * @param args the command line arguments
