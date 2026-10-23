@@ -330,54 +330,59 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCreateActionPerformed
-        // TODO add your handling code here:
-        try {
-        
-        String numTexto = jTextFieldNumero.getText().trim();
-        String fechaTexto = jTextFieldFecha.getText().trim();
-        String impPrestTexto = jTextFieldImporte.getText().trim();
-        String impReciTexto = jTextFieldImporteRecibo.getText().trim();
-        
-       
-        if (numTexto.isEmpty() || impPrestTexto.isEmpty() || impReciTexto.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Por favor, rellena los campos obligatorios (Número e Importes).", "Campos vacíos", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
+try {
+    
+    String numTexto = jTextFieldNumero.getText().trim();
+    String fechaTexto = jTextFieldFecha.getText().trim();
+    String impPrestTexto = jTextFieldImporte.getText().trim();
+    String impReciTexto = jTextFieldImporteRecibo.getText().trim();
+    
    
-        int numPrest = Integer.parseInt(numTexto);
+    if (numTexto.isEmpty() || impPrestTexto.isEmpty() || impReciTexto.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Por favor, rellena los campos obligatorios (Número e Importes).", "Campos vacíos", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    int numPrest = Integer.parseInt(numTexto);
+    
+    if (validarPKCrear(numPrest) == false) {
+        return; 
+    }
+
+    double impPrest = Double.parseDouble(impPrestTexto);
+    double impReci = Double.parseDouble(impReciTexto);
         
-        if (validarPKCrear(numPrest) == false) {
-            return; 
-        }
-
-        double impPrest = Double.parseDouble(impPrestTexto);
-        double impReci = Double.parseDouble(impReciTexto);
-            
-        LocalDate fecha = fechaTexto.isEmpty() ? LocalDate.now() : LocalDate.parse(fechaTexto);
+  if (impReci > impPrest) {
+        JOptionPane.showMessageDialog(this, "El importe del recibo (" + impReci + ") no puede ser mayor que el importe total del préstamo (" + impPrest + ").");
+        return; 
+    }
         
-        String codFPago = jComboBoxFormasPago.getSelectedItem().toString();
+    LocalDate fecha = fechaTexto.isEmpty() ? LocalDate.now() : LocalDate.parse(fechaTexto);
+    
+    String codFPago = jComboBoxFormasPago.getSelectedItem().toString();
 
-        Prestamos nuevoPrestamo = new Prestamos(numPrest, fecha, impPrest, impReci, codFPago);
+    Prestamos nuevoPrestamo = new Prestamos(numPrest, fecha, impPrest, impReci, codFPago);
 
-        int filasAfectadas = PScontrolador.create(nuevoPrestamo); 
+    int filasAfectadas = PScontrolador.create(nuevoPrestamo); 
 
-        if (filasAfectadas > 0) {
-            JOptionPane.showMessageDialog(this, "¡Préstamo creado correctamente!");
+    if (filasAfectadas > 0) {
+        JOptionPane.showMessageDialog(this, "¡Préstamo creado correctamente!");
 
-            cargarTablaPrestamos(PScontrolador.readAll());
+        cargarTablaPrestamos(PScontrolador.readAll());
 
-            int prestamosGenerados = RScontrolador.generarRecibos2(numPrest, impReci);
-           
-            limpiarCampos();
-        } else {
-            JOptionPane.showMessageDialog(this, "No se pudo crear el préstamo en la base de datos.", "Error", JOptionPane.ERROR_MESSAGE);
-        }
+        int prestamosGenerados = RScontrolador.generarRecibos2(numPrest, impReci);
+       
+        limpiarCampos();
+    } else {
+        JOptionPane.showMessageDialog(this, "No se pudo crear el préstamo en la base de datos.", "Error", JOptionPane.ERROR_MESSAGE);
+    }
 
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Error de formato: El número de préstamo y los importes deben ser valores numéricos.", "Error de formato", JOptionPane.ERROR_MESSAGE);
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Ocurrió un error inesperado: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "Error de formato: El número de préstamo y los importes deben ser valores numéricos.", "Error de formato", JOptionPane.ERROR_MESSAGE);
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Ocurrió un error inesperado: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
     }//GEN-LAST:event_jButtonCreateActionPerformed
 
     private void jButtonReadByIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonReadByIdActionPerformed
@@ -529,87 +534,93 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonUpdateActionPerformed
 
     private void jTableRecibosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableRecibosMouseClicked
-        int seleccionado = jTableRecibos.getSelectedRow();
 
-        if (seleccionado != -1) {
-            Object numRecibo = jTableRecibos.getValueAt(seleccionado, 1);
-
-            if (numRecibo != null) {
-                jTextFieldNumeroReciboAPagar.setText(numRecibo.toString());
-            }
-        }
     }//GEN-LAST:event_jTableRecibosMouseClicked
 
     private void jButtonPagarRereciboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPagarRereciboActionPerformed
-        if (!validarBusquedaId()) {
+if (!validarBusquedaId()) {
+        return;
+    }
+
+    String numPrestTexto = jTextFieldNumero.getText().trim();
+
+    int filaSeleccionada = jTableRecibos.getSelectedRow();
+    
+    if (filaSeleccionada == -1) {
+        JOptionPane.showMessageDialog(this, "Por favor, selecciona un recibo de la tabla para pagar.", "Recibo no seleccionado", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    Object valorRecibo = jTableRecibos.getValueAt(filaSeleccionada, 1);
+    String numRecibTexto = valorRecibo != null ? valorRecibo.toString().trim() : "";
+
+    if (numRecibTexto.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Por favor, selecciona un número de recibo válido de la tabla.");
+        return;
+    }
+
+    try {
+        int numPrest = Integer.parseInt(numPrestTexto);
+        int numRecib = Integer.parseInt(numRecibTexto);
+
+        if (RScontrolador.estaPagado(numPrest, numRecib)) {
+            JOptionPane.showMessageDialog(this, "Este recibo ya se encuentra pagado.");
             return;
         }
 
-        String numPrestTexto = jTextFieldNumero.getText().trim();
-        String numRecibTexto = jTextFieldNumeroReciboAPagar.getText().trim();
+        LocalDate fechaActual = LocalDate.now();
 
-        if(numRecibTexto.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Por favor, introduce el numero de recibo que deseas pagar. ");
+        int respuesta = JOptionPane.showConfirmDialog(this, "¿Deseas registrar el pago del recibo " + numRecib + " con fecha de hoy (" + fechaActual + ")?", "Confirmacion de Pago", JOptionPane.YES_NO_OPTION);
+
+        if (respuesta != JOptionPane.YES_OPTION) {
             return;
         }
 
-        try {
-            int numPrest = Integer.parseInt(numPrestTexto);
-            int numRecib = Integer.parseInt(numRecibTexto);
+        int filasAfectadas = RScontrolador.pagarRecibo(numPrest, numRecib, fechaActual);
 
-            if (RScontrolador.estaPagado(numPrest, numRecib)) {
-                JOptionPane.showMessageDialog(this, "Este recibo ya se encuentra pagado.");
-                return;
-            }
+        if (filasAfectadas > 0) {
+            JOptionPane.showMessageDialog(this, "¡Recibo pagado correctamente!");
 
-            LocalDate fechaActual = LocalDate.now();
+            ArrayList<Recibos> listaRecibos = RScontrolador.findById(numPrestTexto);
+            cargarTablaRecibos(listaRecibos);
 
-            int respuesta = JOptionPane.showConfirmDialog(this, "¿Deseas registrar el pago del recibo " + numRecib + " con fecha de hoy (" + fechaActual + ")?", "Confirmacion de Pago", JOptionPane.YES_NO_OPTION);
-
-            if (respuesta != JOptionPane.YES_OPTION) {
-                return;
-            }
-
-            int filasAfectadas = RScontrolador.pagarRecibo(numPrest, numRecib, fechaActual);
-
-            if (filasAfectadas > 0) {
-                JOptionPane.showMessageDialog(this, "¡Recibo pagado correctamente!");
-
-                ArrayList<Recibos> listaRecibos = RScontrolador.findById(numPrestTexto);
-                cargarTablaRecibos(listaRecibos);
-
-                jTextFieldNumeroReciboAPagar.setText("");
-            } else {
-                JOptionPane.showMessageDialog(this, "No se encontro el recibo.");
-            }
-
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "ERROR: El valor introducido es incorrecto");
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "ERROR: " + e.getMessage());
+            // Nota: Ya no limpiamos jTextFieldNumeroReciboAPagar aquí porque ese campo ahora muestra la deuda.
+        } else {
+            JOptionPane.showMessageDialog(this, "No se encontro el recibo.");
         }
+
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "ERROR: El valor introducido es incorrecto");
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "ERROR: " + e.getMessage());
+    }
+
     }//GEN-LAST:event_jButtonPagarRereciboActionPerformed
 
     private void jButtonImporteRestantePorPagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonImporteRestantePorPagarActionPerformed
         String numTexto = jTextFieldNumero.getText().trim();
 
-        if (numTexto.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Por favor, introduce o selecciona un número de prestamo.");
-            return;
-        }
+    if (numTexto.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Por favor, introduce o selecciona un número de prestamo.");
+        return;
+    }
 
-        try {
-            int numPrestamo = Integer.parseInt(numTexto);
+    try {
+        int numPrestamo = Integer.parseInt(numTexto);
 
-            double deudaPendiente = PScontrolador.calcularDeudaPrestamo(numPrestamo);
-            
-            JOptionPane.showMessageDialog(this,"El importe pendiente de pago para el prestamo " + numPrestamo + " es de: " + deudaPendiente + " €","Deuda Pendiente",JOptionPane.INFORMATION_MESSAGE);
+        double deudaPendiente = PScontrolador.calcularDeudaPrestamo(numPrestamo);
+        
+        jTextFieldNumeroReciboAPagar.setText(String.valueOf(deudaPendiente));
+        
+        // Opcional: Si además quieres mantener el mensaje emergente, déjalo; si no, puedes quitarlo.
+        JOptionPane.showMessageDialog(this, "El importe pendiente de pago para el prestamo " + numPrestamo + " es de: " + deudaPendiente + " €", "Deuda Pendiente", JOptionPane.INFORMATION_MESSAGE);
 
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "El numero de prestamo debe ser un valor numerico.");
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Ocurrio un error al calcular la deuda: " + e.getMessage());
-        }
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "El numero de prestamo debe ser un valor numerico.");
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Ocurrio un error al calcular la deuda: " + e.getMessage());
+    }
+
         
 
     }//GEN-LAST:event_jButtonImporteRestantePorPagarActionPerformed
