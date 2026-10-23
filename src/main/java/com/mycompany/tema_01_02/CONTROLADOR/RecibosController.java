@@ -124,7 +124,7 @@ public class RecibosController {
 
             try (ResultSet rs = st.executeQuery()) {
                 if (rs.next()) {
-                    java.sql.Date fechaPago = rs.getDate("DFECPAGO");
+                    Date fechaPago = rs.getDate("DFECPAGO");
                     return fechaPago != null;
                 }
             }
