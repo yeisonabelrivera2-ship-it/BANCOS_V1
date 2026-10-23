@@ -84,6 +84,7 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
         jButtonCrearRecibo = new javax.swing.JButton();
         jButtonPagarRerecibo = new javax.swing.JButton();
         jTextFieldNumeroReciboAPagar = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -235,6 +236,12 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
+        jScrollPane2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jScrollPane2MouseClicked(evt);
+            }
+        });
+
         jTableRecibos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -254,6 +261,11 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
                 return canEdit [columnIndex];
             }
         });
+        jTableRecibos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTableRecibosMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(jTableRecibos);
 
         jButtonImporteRestantePorPagar.setText("Importe restante por pagar");
@@ -261,6 +273,9 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
         jButtonCrearRecibo.setText("Crear recibo");
 
         jButtonPagarRerecibo.setText("Pagar recibo");
+        jButtonPagarRerecibo.addActionListener(this::jButtonPagarRereciboActionPerformed);
+
+        jLabel7.setText("Nº Recibo");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -277,13 +292,20 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jButtonImporteRestantePorPagar, javax.swing.GroupLayout.DEFAULT_SIZE, 213, Short.MAX_VALUE)
-                                    .addComponent(jTextFieldNumeroReciboAPagar))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jButtonImporteRestantePorPagar, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(0, 0, Short.MAX_VALUE))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addGap(0, 0, Short.MAX_VALUE)
+                                        .addComponent(jTextFieldNumeroReciboAPagar, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jButtonCrearRecibo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jButtonPagarRerecibo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                                    .addComponent(jButtonPagarRerecibo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -299,11 +321,13 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jButtonImporteRestantePorPagar, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButtonCrearRecibo, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jTextFieldNumeroReciboAPagar, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButtonPagarRerecibo, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jButtonPagarRerecibo, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
-                            .addComponent(jTextFieldNumeroReciboAPagar))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1))
                 .addContainerGap())
@@ -505,6 +529,77 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
         }
         
     }//GEN-LAST:event_jButtonUpdateActionPerformed
+
+    private void jButtonPagarRereciboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPagarRereciboActionPerformed
+        if (!validarBusquedaId()) {
+            return;
+        }
+
+        String numPrestTexto = jTextFieldNumero.getText().trim();
+        String numRecibTexto = jTextFieldNumeroReciboAPagar.getText().trim();
+
+        if(numRecibTexto.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Por favor, introduce el numero de recibo que deseas pagar. ");
+            return;
+        }
+
+        try{
+            int numPrest = Integer.parseInt(numPrestTexto);
+            int numRecib = Integer.parseInt(numRecibTexto);
+
+            LocalDate fechaActual = LocalDate.now();
+
+            int respuesta = JOptionPane.showConfirmDialog(this,"¿Deseas registrar el pago del recibo " + numRecib + " con fecha de hoy (" + fechaActual + ")?","Confirmacion de Pago", JOptionPane.YES_NO_OPTION);
+
+            if (respuesta != JOptionPane.YES_OPTION) {
+                return;
+            }
+
+            // USAMOS EL CONTROLADOR Y EL PAGARRECIBO
+            int filasAfectadas = RScontrolador.pagarRecibo(numPrest, numRecib, fechaActual);
+
+            if (filasAfectadas > 0) {
+                JOptionPane.showMessageDialog(this, "¡Recibo pagado correctamente!");
+
+                ArrayList<Recibos> listaRecibos = RScontrolador.findById(numPrestTexto);
+                cargarTablaRecibos(listaRecibos);
+
+                jTextFieldNumeroReciboAPagar.setText("");
+            } else {
+                JOptionPane.showMessageDialog(this, "No se encontro el recibo o ya estaba pagado.");
+            }
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "ERROR: El valor introducido es incorrecto");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "ERROR: " + e.getMessage());
+        }
+    }//GEN-LAST:event_jButtonPagarRereciboActionPerformed
+
+    private void jScrollPane2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jScrollPane2MouseClicked
+        int seleccionado = jTableRecibos.getSelectedRow();
+
+            if (seleccionado != -1) {
+                Object numRecibo = jTableRecibos.getValueAt(seleccionado, 1);
+
+                if (numRecibo != null) {
+                    jTextFieldNumeroReciboAPagar.setText(numRecibo.toString());
+                }
+            }
+    }//GEN-LAST:event_jScrollPane2MouseClicked
+
+    private void jTableRecibosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableRecibosMouseClicked
+        int seleccionado = jTableRecibos.getSelectedRow();
+
+        if (seleccionado != -1) {
+            Object numRecibo = jTableRecibos.getValueAt(seleccionado, 1);
+
+            if (numRecibo != null) {
+                jTextFieldNumeroReciboAPagar.setText(numRecibo.toString());
+            }
+        }
+
+    }//GEN-LAST:event_jTableRecibosMouseClicked
     
     /**
      * @param args the command line arguments
@@ -562,6 +657,7 @@ public class JDialogPrestamosRecibos extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
